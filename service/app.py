@@ -1,17 +1,21 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session, make_response
 from dotenv import load_dotenv
 import os
 import logging
 from models import db
-from models.test_message import TestMessage
-from models.s3_asset import S3Asset
-from routes import message_bp
-import boto3
-from botocore.exceptions import ClientError
+from routes import message_bp, blog_bp, contact_bp
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
+
+# Secret key for server-side sessions (set via .env in production)
+app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-change-me')
+
+# Configure CORS to allow credentialed requests from the frontend origin
+FRONTEND_ORIGIN = os.getenv('FRONTEND_ORIGIN', 'http://localhost:5173')
+CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": FRONTEND_ORIGIN}})
 
 handler = logging.StreamHandler()
 handler.setLevel(logging.INFO)
@@ -21,39 +25,26 @@ app.logger.setLevel(logging.INFO)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Note: Flask-Mail removed — contact messages are stored in DB only.
+
 db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# register existing blueprints (message, blog, contact)
+from routes import message_bp, blog_bp, contact_bp
 app.register_blueprint(message_bp)
+app.register_blueprint(blog_bp)
+app.register_blueprint(contact_bp)
 
-S3_BUCKET_NAME = "aradhyac-assets"  # Your bucket name
+# register projects blueprint
+from routes import projects_bp
+app.register_blueprint(projects_bp)
 
-@app.route('/api/media/download-url/<path:file_name>')
-def get_download_url(file_name):
-    """Generates a presigned URL to download a file from S3."""
-    s3_client = boto3.client('s3')
-    try:
-        # URL is valid for 1 hour (3600 seconds)
-        url = s3_client.generate_presigned_url('get_object',
-                                                Params={'Bucket': S3_BUCKET_NAME,
-                                                        'Key': file_name},
-                                                ExpiresIn=3600)
-        app.logger.info(f"Generated download URL for {file_name}")
-        return jsonify({"url": url})
-    except ClientError as e:
-        app.logger.error(f"Error generating S3 download URL: {e}")
-        return jsonify({"error": "Could not generate URL"}), 500
-
-@app.route('/api/s3-assets')
-def get_s3_assets():
-    """Gets all S3 assets from the database."""
-    try:
-        assets = S3Asset.query.all()
-        return jsonify([asset.to_json() for asset in assets])
-    except Exception as e:
-        app.logger.error(f"Error fetching S3 assets: {e}")
-        return jsonify({"error": "Could not fetch assets"}), 500
+# register admin and media blueprints (moved from app.py into routes/controllers)
+from routes import admin_bp, media_bp
+app.register_blueprint(admin_bp)
+app.register_blueprint(media_bp)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

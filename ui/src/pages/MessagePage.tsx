@@ -1,57 +1,21 @@
 // @ts-ignore
-import { useSelector, useDispatch } from 'react-redux';
-import { Button, TextField, Typography, Container, Box } from '@mui/material';
-import { fetchMessageRequest } from '../store/actions/messageActions';
-import type { RootState, AppDispatch } from '../store';
+import { Typography, Box, Container } from '@mui/material';
 
-function MessagePage() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { message, loading, error } = useSelector((state: RootState) => state.message);
-
-  const handleFetchMessage = () => {
-    dispatch(fetchMessageRequest());
-  };
-
-  const appTitle = import.meta.env.VITE_APP_TITLE || "Default Title";
-
+function ProjectsPage() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4, textAlign: 'center' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {appTitle}
+    <Container maxWidth="md">
+      <Box sx={{ textAlign: 'center', mt: 8 }}>
+        <Typography variant="h4" gutterBottom>Projects</Typography>
+        <Typography variant="h6" color="text.secondary">
+          Coming Soon...
         </Typography>
-        <Typography variant="h5" component="h2" gutterBottom>
-          Message from MariaDB
-        </Typography>
-        <TextField
-          label="Message"
-          multiline
-          rows={4}
-          value={message}
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleFetchMessage}
-          disabled={loading}
-          sx={{ mt: 2 }}
-        >
-          {loading ? 'Loading...' : 'Fetch Message'}
-        </Button>
-        {error && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            Error: {error}
-          </Typography>
-        )}
+        <Box sx={{ mt: 4 }}>
+          {/* Add a nice graphic here, e.g., an image or icon */}
+          <Typography variant="body1">Exciting projects are on the way!</Typography>
+        </Box>
       </Box>
     </Container>
   );
 }
 
-export default MessagePage;
+export default ProjectsPage;

@@ -1,60 +1,67 @@
 // @ts-ignore
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { Typography, Box, Container, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { fetchImageRequest } from '../store/actions/imageActions';
-import { fetchAssetsRequest } from '../store/actions/assetsActions';
-import type { RootState, AppDispatch } from '../store';
+import { Typography, Box, Container, Grid, Card, CardContent } from '@mui/material';
 
-function ImagePage() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { url, loading: imageLoading, error: imageError } = useSelector((state: RootState) => state.image);
-  const { assets, loading: assetsLoading, error: assetsError } = useSelector((state: RootState) => state.assets);
-
-  useEffect(() => {
-    dispatch(fetchAssetsRequest());
-  }, [dispatch]);
-
-  const handleSelectAsset = (fileName: string) => {
-    dispatch(fetchImageRequest(fileName));
-  };
-
+function AboutPage() {
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <Box sx={{ my: 4, textAlign: 'center' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Image from S3
+        <Typography variant="h4" gutterBottom>Hi there! I am Aradhya.</Typography>
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
         </Typography>
-        {assetsLoading && <Typography>Loading assets...</Typography>}
-        {assetsError && <Typography color="error">Error loading assets: {assetsError}</Typography>}
-        {!assetsLoading && !assetsError && (
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h6">Available Images:</Typography>
-            <List>
-              {assets.map((asset) => (
-                <ListItem key={asset.id}>
-                  <ListItemButton onClick={() => handleSelectAsset(asset.file_name)}>
-                    <ListItemText primary={asset.file_name} secondary={asset.file_type} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        )}
-        {imageLoading && <Typography>Loading image...</Typography>}
-        {imageError && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            Error: {imageError}
-          </Typography>
-        )}
-        {url && (
-          <Box sx={{ mt: 2 }}>
-            <img src={url} alt="S3 Image" style={{ maxWidth: '100%', height: 'auto' }} />
-          </Box>
-        )}
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Skill 1</Typography>
+                <Typography variant="body2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Skill 2</Typography>
+                <Typography variant="body2">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Skill 3</Typography>
+                <Typography variant="body2">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Experience</Typography>
+                <Typography variant="body2">Nisi ut aliquip ex ea commodo consequat.</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Hobbies</Typography>
+                <Typography variant="body2">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Contact</Typography>
+                <Typography variant="body2">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
     </Container>
   );
 }
 
-export default ImagePage;
+export default AboutPage;

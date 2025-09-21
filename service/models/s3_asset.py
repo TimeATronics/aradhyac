@@ -5,6 +5,7 @@ class S3Asset(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     file_name = db.Column(db.String(255), nullable=False)
     file_type = db.Column(db.String(100), nullable=False)
+    use_type = db.Column(db.String(50), nullable=False, default='general')
 
     def to_json(self):
-        return { 'id': self.id, 'file_name': self.file_name, 'file_type': self.file_type }
+        return { 'id': self.id, 'file_name': self.file_name, 'file_type': self.file_type, 'use_type': self.use_type }
