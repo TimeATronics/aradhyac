@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typography, Box } from '@mui/material';
 import { fetchBlogs, searchBlogs } from '../store/actions/blogActions';
 import HeroImage from '../components/HeroImage';
+import './responsive-overrides.css';
 
 // Small TagOverflow helper (matches BlogPage behavior) so admin overflow works the same
 const TagOverflow: React.FC<{ tags: string[]; onTagClick: (t: string) => void }> = ({ tags, onTagClick }) => {
@@ -94,8 +95,8 @@ const S3ImagePicker: React.FC<{
             {filtered.map((a) => (
               <div key={a.id} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <S3AssetPreview fileName={a.file_name} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: 'Consolas, monospace' }}>{a.file_name}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: 'Consolas, monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={a.file_name}>{a.file_name}</div>
                 </div>
                 <div className="motif-btn" onClick={() => { onSelect && onSelect(a.file_name); onClose(); }} style={{ cursor: 'pointer' }}>Insert</div>
                 <div className="motif-btn" onClick={() => { onSetHero && onSetHero(a.file_name); }} style={{ cursor: 'pointer' }}>Set as Hero</div>
@@ -248,6 +249,25 @@ export default function AdminPage() {
 
   const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setTagSearchText(e.target.value);
 
+  const doLogout = async () => {
+    try {
+      const resp = await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (resp.ok) {
+        // Clear admin auth state
+        try { localStorage.removeItem('adminAuthenticated'); } catch (e) {}
+        // Navigate back to home
+        navigate('/', { replace: true });
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (e) {
+      console.error('Logout error:', e);
+    }
+  };
+
   const doSearch = () => {
     const q = (searchText || '').trim();
     const tag = (tagSearchText || '').trim();
@@ -262,9 +282,10 @@ export default function AdminPage() {
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: 'var(--motif-text)' }}>Manage Blogs</Typography>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
         <button className="motif-btn" onClick={() => openModal(null)}>Add Blog</button>
+        <button className="motif-btn" onClick={doLogout}>Logout</button>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+      <div className="motif-search-controls" style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
         <input aria-label="Search admin by keyword or tag" placeholder="search tags or keywords" value={searchText} onChange={(e) => { const v = e.target.value.replace(/[\x00-\x1f\x7f]/g,''); if (v.length<=200) setSearchText(v); }} className="motif-input" style={{ flex: 1 }} />
         <button className="motif-btn" onClick={() => setShowTagSearch(s => !s)} aria-pressed={showTagSearch} style={{ minWidth: 64, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Tags</button>
         <button className="motif-btn" onClick={() => { const q = (searchText||'').trim(); if (q.length>200) return; doSearch(); }} style={{ whiteSpace: 'nowrap', minWidth: '88px', height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Search</button>

@@ -61,7 +61,7 @@ function AboutPage() {
             <div style={{ flex: '1 1 60%', minWidth: 200 }}>
               <Typography variant="h4" gutterBottom sx={{ color: 'var(--motif-text)' }}>Hi there! I am Aradhya.</Typography>
               <Typography variant="body1" paragraph sx={{ color: 'var(--motif-text)' }}>
-                I build thoughtful, accessible web interfaces with a focus on performance and simplicity. I enjoy crafting clean UI, exploring new frontend patterns, and turning ideas into maintainable projects.
+                I am an undergraduate Computer Science student who enjoys building software and exploring how things run on different kinds of systems, from desktops to low-powered devices. I spend a lot of my free time tinkering with open-source projects, FPGAs &amp; Arduinos, fixing bugs, and making them work in new places. I'm comfortable working with languages like Python, Java, C, Javascript, and tools across the Unix/Linux ecosystem. More than anything, I like learning by building and experimenting; it keeps the journey exciting.
               </Typography>
             </div>
             <div className="about-profile" style={{ flex: '0 0 auto', marginLeft: isMobile ? 0 : 'auto', marginTop: isMobile ? 12 : 0 }}>

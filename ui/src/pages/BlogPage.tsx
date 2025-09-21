@@ -6,6 +6,7 @@ import { Typography, Box, Card, CardActionArea, CardContent } from '@mui/materia
 
 import { fetchBlogs, searchBlogs } from '../store/actions/blogActions';
 import HeroImage from '../components/HeroImage';
+import './responsive-overrides.css';
 
 const TagOverflow: React.FC<{ tags: string[]; onTagClick: (t: string) => void }> = ({ tags, onTagClick }) => {
    const [open, setOpen] = useState(false);
@@ -245,7 +246,7 @@ function BlogPage() {
     <Box sx={{ maxWidth: 900, mx: 'auto', p: 2 }}>
       <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: 'var(--motif-text)' }}>Latest Blogs</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="motif-search-controls" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
             aria-label="Search by keyword or tag"
             placeholder="search tags or keywords"

@@ -1,7 +1,7 @@
 // @ts-ignore
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Box, Paper, TextField, Link, Snackbar, Alert, ThemeProvider, createTheme, Modal, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Box, Paper, TextField, Link, Snackbar, Alert, ThemeProvider, createTheme, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Menu as MenuIcon, Brightness4, Brightness7, AccountCircle } from '@mui/icons-material';
 
 interface LayoutProps {
@@ -20,7 +20,6 @@ function Layout({ children }: LayoutProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
 
   const theme = createTheme({
     palette: {
@@ -69,7 +68,7 @@ function Layout({ children }: LayoutProps) {
 
   const handleContactSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

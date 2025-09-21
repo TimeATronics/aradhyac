@@ -224,7 +224,7 @@ const Window = styled.div`
   max-width: calc(100vw - 40px);
   height: calc(100vh - 40px);
   background: ${(p: any) => p.theme.bg};
-  padding: 3px;
+  padding: 12px;
   ${outsetBorder}
   border-top-color: ${(p: any) => p.theme.borderLight};
   border-left-color: ${(p: any) => p.theme.borderLight};
@@ -234,6 +234,13 @@ const Window = styled.div`
   box-shadow: inset 0 2px 0 rgba(255,255,255,0.02);
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 600px) {
+    padding: 2px;
+    width: calc(100vw - 12px);
+    max-width: calc(100vw - 12px);
+    height: calc(100vh - 12px);
+  }
 `;
 
 // Ensure content inside window scrolls if needed
@@ -247,6 +254,10 @@ const Content = styled.main`
   border-bottom-color: ${(p: any) => p.theme.borderLight};
   padding: 16px;
   overflow: auto;
+
+  @media (max-width: 600px) {
+    padding: 2px;
+  }
 `;
 
 const TitleBar = styled.div`
@@ -318,7 +329,7 @@ const Toolbar = styled.div`
 `;
 
 const Footer = styled.footer`
-  padding: 4px 8px; /* reduced vertical padding to make footer thinner */
+  padding: 4px 8px;
   text-align: center;
   border-top: 2px solid ${(p: any) => p.theme.borderDark};
   background: ${(p: any) => p.theme.footerBg};
@@ -326,7 +337,45 @@ const Footer = styled.footer`
   font-size: 12px;
   min-height: 36px;
 
-  /* make motif buttons inside footer more compact and vertically centered */
+  .footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .footer-left {
+    flex: 1;
+    text-align: left;
+    min-width: 0;
+    word-break: break-word;
+    white-space: pre-line;
+  }
+  .footer-center {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .footer-right {
+    flex: 0 0 auto;
+    text-align: right;
+  }
+  .footer-action-btn {
+    height: 32px;
+    width: auto;
+    min-width: unset;
+    padding: 0 14px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 0 2px;
+  }
   .motif-btn {
     padding: 4px 6px;
     font-size: 12px;
@@ -438,6 +487,8 @@ export default function MotifLayout({ children }: { children: React.ReactNode })
   const [overflowDropdownOpen, setOverflowDropdownOpen] = useState(false);
   const [overflowDropdownPos, setOverflowDropdownPos] = useState<{ left: number; top: number } | null>(null);
   const [windowIsSmall, setWindowIsSmall] = useState<boolean>(window.innerWidth <= 720);
+
+  const [footerLinksOpen, setFooterLinksOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -760,6 +811,19 @@ export default function MotifLayout({ children }: { children: React.ReactNode })
     } catch (e) {}
   }, [location.key]);
 
+  useEffect(() => {
+    if (!footerLinksOpen) return;
+    function handleClick(e: MouseEvent) {
+      const menu = document.getElementById('footer-links-menu');
+      const btn = document.getElementById('footer-links-btn');
+      if (menu && !menu.contains(e.target as Node) && btn && !btn.contains(e.target as Node)) {
+        setFooterLinksOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [footerLinksOpen]);
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
@@ -814,35 +878,43 @@ export default function MotifLayout({ children }: { children: React.ReactNode })
         </Toolbar>
 
         <Content ref={contentRef as any} style={{ position: 'relative' }}>
-          <div style={{ maxWidth: '900px', margin: '0 auto', padding: '8px' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: '6px' }}>
             {children}
           </div>
         </Content>
 
         <Footer>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ flex: 1, textAlign: 'left' }}>
-              <small style={{ color: '#ffffff', fontFamily: 'Consolas, monospace', fontWeight: 700, fontSize: '13px' }}>© 2025 Aradhya Chakrabarti</small>
+          <div className="footer-content">
+            <div className="footer-left">
+              <small style={{ color: '#ffffff', fontFamily: 'Consolas, monospace', fontWeight: 700, fontSize: '13px', whiteSpace: 'pre-line' }}>
+                © 2025 Aradhya Chakrabarti
+              </small>
             </div>
-            <div style={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 8 }}>
-              <a className="motif-btn" href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" title="GitHub" style={{ padding: '4px 8px' }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M8 .198a8 8 0 00-2.53 15.59c.4.074.546-.174.546-.388 0-.192-.007-.70-.01-1.37-2.22.484-2.69-1.07-2.69-1.07-.363-.923-.887-1.17-.887-1.17-.726-.497.055-.487.055-.487.803.056 1.225.825 1.225.825.714 1.223 1.872.87 2.33.666.072-.517.28-.87.51-1.07-1.77-.2-3.63-.885-3.63-3.943 0-.872.312-1.586.824-2.146-.083-.202-.357-1.015.078-2.116 0 0 .672-.215 2.2.82a7.6 7.6 0 012.004-.27c.68.003 1.366.092 2.004.27 1.527-1.035 2.198-.82 2.198-.82.437 1.101.163 1.914.08 2.116.513.56.823 1.274.823 2.146 0 3.07-1.864 3.74-3.64 3.936.288.248.543.736.543 1.484 0 1.072-.01 1.936-.01 2.2 0 .216.144.466.55.387A8.001 8.001 0 008 .198z" fill="#ffffff"/></svg>
-              </a>
-              <a className="motif-btn" href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" style={{ padding: '4px 8px' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5a2.5 2.5 0 11-.002 5.002A2.5 2.5 0 014.98 3.5zM3 9h4v12H3zM9 9h3.8v1.61h.05c.53-.99 1.82-2.03 3.75-2.03 4.01 0 4.75 2.64 4.75 6.06V21h-4v-5.25c0-1.25-.02-2.86-1.74-2.86-1.74 0-2.01 1.36-2.01 2.76V21H9V9z" fill="#ffffff"/></svg>
-              </a>
-              <a className="motif-btn" href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" title="Google Scholar" style={{ padding: '4px 8px', display: 'flex', alignItems: 'center' }}>
-                {/* Google Scholar icon (white/gray-only) */}
-                <svg width="16" height="16" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                  <path fill="#ffffff" d="M256 411.12L0 202.667 256 0z"/>
-                  <path fill="#d0d0d0" d="M256 411.12l256-208.453L256 0z"/>
-                  <circle fill="#bfbfbf" cx="256" cy="362.667" r="149.333"/>
-                  <path fill="#e6e6e6" d="M121.037 298.667c23.968-50.453 75.392-85.334 134.963-85.334s110.995 34.881 134.963 85.334H121.037z"/>
-                </svg>
-              </a>
+            <div className="footer-center">
+              <button id="footer-links-btn" className="motif-btn footer-action-btn" onClick={() => setFooterLinksOpen(v => !v)}>
+                Links
+              </button>
+              {footerLinksOpen && (
+                <div id="footer-links-menu" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: '36px', background: theme.footerBg, border: '2px solid ' + theme.borderDark, zIndex: 3000, borderRadius: 4, padding: 4, boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
+                  <a className="motif-btn" href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" title="GitHub" style={{ margin: 2, padding: '4px 8px', display: 'block' }}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M8 .198a8 8 0 00-2.53 15.59c.4.074.546-.174.546-.388 0-.192-.007-.70-.01-1.37-2.22.484-2.69-1.07-2.69-1.07-.363-.923-.887-1.17-.887-1.17-.726-.497.055-.487.055-.487.803.056 1.225.825 1.225.825.714 1.223 1.872.87 2.33.666.072-.517.28-.87.51-1.07-1.77-.2-3.63-.885-3.63-3.943 0-.872.312-1.586.824-2.146-.083-.202-.357-1.015.078-2.116 0 0 .672-.215 2.2.82a7.6 7.6 0 012.004-.27c.68.003 1.366.092 2.004.27 1.527-1.035 2.198-.82 2.198-.82.437 1.101.163 1.914.08 2.116.513.56.823 1.274.823 2.146 0 3.07-1.864 3.74-3.64 3.936.288.248.543.736.543 1.484 0 1.072-.01 1.936-.01 2.2 0 .216.144.466.55.387A8.001 8.001 0 008 .198z" fill="#ffffff"/></svg> GitHub
+                  </a>
+                  <a className="motif-btn" href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" style={{ margin: 2, padding: '4px 8px', display: 'block' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5a2.5 2.5 0 11-.002 5.002A2.5 2.5 0 014.98 3.5zM3 9h4v12H3zM9 9h3.8v1.61h.05c.53-.99 1.82-2.03 3.75-2.03 4.01 0 4.75 2.64 4.75 6.06V21h-4v-5.25c0-1.25-.02-2.86-1.74-2.86-1.74 0-2.01 1.36-2.01 2.76V21H9V9z" fill="#ffffff"/></svg> LinkedIn
+                  </a>
+                  <a className="motif-btn" href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" title="Google Scholar" style={{ margin: 2, padding: '4px 8px', display: 'block' }}>
+                    <svg width="16" height="16" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                      <path fill="#ffffff" d="M256 411.12L0 202.667 256 0z"/>
+                      <path fill="#d0d0d0" d="M256 411.12l256-208.453L256 0z"/>
+                      <circle fill="#bfbfbf" cx="256" cy="362.667" r="149.333"/>
+                      <path fill="#e6e6e6" d="M121.037 298.667c23.968-50.453 75.392-85.334 134.963-85.334s110.995 34.881 134.963 85.334H121.037z"/>
+                    </svg> Scholar
+                  </a>
+                </div>
+              )}
             </div>
-            <div style={{ flex: 1, textAlign: 'right' }}>
-              <MotifBtn onClick={openModal}>Contact</MotifBtn>
+            <div className="footer-right">
+              <MotifBtn className="footer-action-btn" onClick={openModal}>Contact</MotifBtn>
             </div>
           </div>
          </Footer>
@@ -904,7 +976,7 @@ export default function MotifLayout({ children }: { children: React.ReactNode })
             <ModalWindow onClick={(e) => e.stopPropagation()} style={{ width: 'min(92vw, 420px)', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--motif-titlebar-bg)', color: 'var(--motif-titlebar-text)', padding: '6px 8px' }}>
                 <div style={{ color: 'var(--motif-titlebar-text)', fontWeight: 700 }}>Admin Login</div>
-                <div className="motif-btn" onClick={closeModal} style={{ borderRadius: 8, padding: '6px 8px' }}>◯</div>
+                <div className="motif-btn" onClick={() => setLoginOpen(false)} style={{ borderRadius: 8, padding: '6px 8px' }}>✕</div>
               </div>
               <div style={{ padding: 8 }}>
                 <div style={{ marginBottom: 8 }}>

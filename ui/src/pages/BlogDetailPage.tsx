@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Typography, Box, Paper } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import HeroImage from '../components/HeroImage';
+import './responsive-overrides.css';
 
 interface Blog {
   id: number;
@@ -29,7 +30,7 @@ function BlogDetailPage() {
 
   const fetchBlog = async (blogId: number) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/blogs/${blogId}`);
+      const response = await fetch(`/api/blogs/${blogId}`);
       const data = await response.json();
       setBlog(data);
     } catch (error) {
@@ -43,8 +44,8 @@ function BlogDetailPage() {
   if (!blog) return <Typography sx={{ color: 'var(--motif-text)' }}>Blog not found</Typography>;
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, color: 'var(--motif-text)' }}>
-      <Box className="motif-card" sx={{ p: { xs: 1, sm: 2 }, backgroundColor: 'var(--motif-subcard-bg)' }}>
+    <Box className="motif-blogdetail-main" sx={{ p: { xs: 1, sm: 2, md: 3 }, color: 'var(--motif-text)' }}>
+      <Box className="motif-card motif-blogdetail-text" sx={{ p: { xs: 1, sm: 2 }, backgroundColor: 'var(--motif-subcard-bg)' }}>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
           <Box sx={{ flex: { xs: 1, md: 2 } }}>
             {/* Title + optional hero banner */}

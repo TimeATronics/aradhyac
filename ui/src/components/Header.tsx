@@ -1,6 +1,6 @@
 // @ts-ignore
 import { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Switch, Box, useTheme, useMediaQuery } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar, Box, useTheme, useMediaQuery } from '@mui/material';
 import { Menu as MenuIcon, Brightness4, Brightness7 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
