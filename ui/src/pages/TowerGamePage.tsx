@@ -1203,18 +1203,34 @@ export default function TowerGamePage() {
 
   // run resize once to ensure initial camera/frustum is computed to fit the canvas
   try { onResize(); } catch (e) { /* ignore */ }
-  // run sizing again on next frame after layout has settled
+    // run sizing again on next frame after layout has settled
   requestAnimationFrame(() => { try { fitContainerToViewport(); onResize(); } catch (e) { } });
-  // also apply a very short deferred sizing in case fonts or layout shift after mount
-  setTimeout(() => { try { fitContainerToViewport(); onResize(); } catch (e) { } }, 80);
+  // also apply a few deferred sizing attempts in case fonts/layout shift or mobile address bars change
+  const t1 = window.setTimeout(() => { try { fitContainerToViewport(); onResize(); } catch (e) { } }, 80);
+  const t2 = window.setTimeout(() => { try { fitContainerToViewport(); onResize(); } catch (e) { } }, 300);
+  const t3 = window.setTimeout(() => { try { fitContainerToViewport(); onResize(); } catch (e) { } }, 900);
+
+  function handleOrientation() {
+    try { fitContainerToViewport(); onResize(); } catch (e) { }
+    // also schedule a follow-up in case the UA chrome animates away
+    window.setTimeout(() => { try { fitContainerToViewport(); onResize(); } catch (e) { } }, 260);
+  }
+  window.addEventListener('orientationchange', handleOrientation);
+  // pageshow handles bfcache restores which sometimes preserve stale layout
+  window.addEventListener('pageshow', handleOrientation);
 
     // cleanup
     return () => {
       cancelAnimationFrame(rafId);
       renderer.domElement.removeEventListener('pointerdown', onPointer as any);
-      window.removeEventListener('resize', onResize);
+  window.removeEventListener('resize', onResize);
       // remove the viewport-fit listener we added and restore container styles
       window.removeEventListener('resize', fitContainerToViewport);
+  window.removeEventListener('orientationchange', handleOrientation);
+  window.removeEventListener('pageshow', handleOrientation);
+  try { window.clearTimeout(t1); } catch (e) {}
+  try { window.clearTimeout(t2); } catch (e) {}
+  try { window.clearTimeout(t3); } catch (e) {}
       try {
         container.style.position = prevContainerPosition;
         container.style.height = prevContainerHeight;
