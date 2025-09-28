@@ -1,6 +1,7 @@
 // @ts-ignore
 import React, { useEffect, useState } from 'react';
 import { Typography, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 function RepoCard({ repo }: { repo: any }) {
   // derive a hue per repo for distinct but darker cards
@@ -147,9 +148,12 @@ function ProjectsPage() {
       <div style={{ height: 24 }} />
       <Typography variant="h5" sx={{ color: 'var(--motif-text)', mt: 2, mb: 1 }}>Hosted Projects</Typography>
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-        <div className="motif-card" style={{ padding: 12, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 130, boxSizing: 'border-box' }}>
-          <Typography variant="h6" sx={{ color: 'var(--motif-text)', textAlign: 'center' }}>Coming Soon</Typography>
-        </div>
+        <Link to="/tower" style={{ textDecoration: 'none', width: '100%' }}>
+          <div className="motif-card" role="button" tabIndex={0} style={{ padding: 12, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 130, boxSizing: 'border-box', cursor: 'pointer' }}>
+            <Typography variant="h6" sx={{ color: 'var(--motif-text)', textAlign: 'center' }}>Tower Sort 3D</Typography>
+            <Typography variant="caption" sx={{ color: 'var(--motif-text)', textAlign: 'center' }}>Play the 3D tower sorting game</Typography>
+          </div>
+        </Link>
         <div className="motif-card" style={{ padding: 12, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 130, boxSizing: 'border-box' }}>
           <Typography variant="h6" sx={{ color: 'var(--motif-text)', textAlign: 'center' }}>Coming Soon</Typography>
         </div>
