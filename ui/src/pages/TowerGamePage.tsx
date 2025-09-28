@@ -144,6 +144,7 @@ export default function TowerGamePage() {
   const [sealed, setSealed] = useState<boolean[]>([]);
   const { playTone } = useAudio();
   const sealedRef = useRef<boolean[]>([]);
+  const softResetRef = useRef<null | (() => void)>(null);
 
   useEffect(() => {
     // prevent the page from scrolling while the game is mounted
@@ -630,8 +631,8 @@ export default function TowerGamePage() {
       // auxiliaries remain empty
     }
 
-    // Soft-reset helper: clear existing disks and reinitialize the pool without reloading the page.
-    function softReset() {
+  // Soft-reset helper: clear existing disks and reinitialize the pool without reloading the page.
+  function softReset() {
       try {
         const scene = sceneRef.current;
         if (!scene) return;
@@ -661,6 +662,8 @@ export default function TowerGamePage() {
         updateSpecialEnabled();
       } catch (e) { /* ignore */ }
     }
+    // expose the softReset to outer scope so the Reset button can call it
+    try { softResetRef.current = softReset; } catch (e) { /* ignore */ }
 
     // check whether a peg is completed (has MAX_PER_PEG all of same color)
     function checkCompleted(pegIndex: number) {
@@ -1259,6 +1262,7 @@ export default function TowerGamePage() {
 
     // cleanup
     return () => {
+      try { softResetRef.current = null; } catch (e) {}
       cancelAnimationFrame(rafId);
       renderer.domElement.removeEventListener('pointerdown', onPointer as any);
   window.removeEventListener('resize', onResize);
@@ -1322,9 +1326,11 @@ export default function TowerGamePage() {
       playTone(240, 0.06, 'sine');
       showTransientMessage('Resetting...', 400);
     } catch (e) { /* ignore */ }
-    // short delay so message and tone are perceived before reload
+    // call the in-memory reset (no full page reload)
     setTimeout(() => {
-      try { window.location.reload(); } catch (e) { /* ignore */ }
+      try {
+        if (softResetRef.current) softResetRef.current();
+      } catch (e) { /* ignore */ }
     }, 420);
   }
 
