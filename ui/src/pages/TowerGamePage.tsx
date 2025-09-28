@@ -543,6 +543,9 @@ export default function TowerGamePage() {
     // now that pegPositions exists, compute camera center
     computeContentCenterAndPosition();
 
+    // local alias for peg positions used by several helper functions below
+    const pegPositionsLocal = (scene as any).userData.pegPositions as { x: number; z: number }[];
+
     // raycaster setup
     const ray = new THREE.Raycaster();
     rayRef.current = ray;
@@ -586,9 +589,6 @@ export default function TowerGamePage() {
       return false;
     }
 
-    // disks data
-    disksRef.current = Array.from({ length: PEG_COUNT }, () => []);
-
     // helper to create a disk mesh
     function createDiskMesh(colorHex: number) {
       const geo = new THREE.CylinderGeometry(diskRadius, diskRadius, diskThickness, 32);
@@ -597,34 +597,70 @@ export default function TowerGamePage() {
       return mesh;
     }
 
-    // initialize disks: we should have NUM_COLORS * MAX_PER_PEG total disks
-    // per requirements, initially all disks are placed on the TARGET_PEGS (first row) with 4 of each color (random arrangement)
-    const pegPositionsLocal = (scene as any).userData.pegPositions as { x: number; z: number }[];
-    // build color pool: each color repeats MAX_PER_PEG times
-    const colorPool: number[] = [];
-    for (let c = 0; c < COLORS.length; c++) {
-      for (let k = 0; k < MAX_PER_PEG; k++) colorPool.push(c);
-    }
-    // shuffle pool
-    for (let i = colorPool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const tmp = colorPool[i]; colorPool[i] = colorPool[j]; colorPool[j] = tmp;
-    }
-    // fill the TARGET_PEGS (first TARGET_PEGS indices) with 4 disks each by popping from pool
-    let poolIdx = 0;
-    for (let p = 0; p < TARGET_PEGS; p++) {
-      for (let lvl = 0; lvl < MAX_PER_PEG; lvl++) {
-        const colorIndex = colorPool[poolIdx++];
-        const mesh = createDiskMesh(COLORS[colorIndex]);
-        const pos = pegPositionsLocal[p];
-  const y = plateTop + (diskThickness / 2) + lvl * stackSpacing;
-        mesh.position.set(pos.x, y, pos.z);
-        mesh.userData = { pegIndex: p, level: lvl };
-        scene.add(mesh);
-        disksRef.current[p].push({ colorIndex, mesh, peg: p });
+    // disk initialization extracted so we can reuse it for soft resets (no page reload)
+    function initDisks() {
+      const scene = sceneRef.current!;
+      const pegPositionsLocal = (scene as any).userData.pegPositions as { x: number; z: number }[];
+      // reset tracking array
+      disksRef.current = Array.from({ length: PEG_COUNT }, () => []);
+      // build color pool: each color repeats MAX_PER_PEG times
+      const colorPool: number[] = [];
+      for (let c = 0; c < COLORS.length; c++) {
+        for (let k = 0; k < MAX_PER_PEG; k++) colorPool.push(c);
       }
+      // shuffle pool
+      for (let i = colorPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = colorPool[i]; colorPool[i] = colorPool[j]; colorPool[j] = tmp;
+      }
+      // fill the TARGET_PEGS (first TARGET_PEGS indices) with MAX_PER_PEG disks each by popping from pool
+      let poolIdx = 0;
+      for (let p = 0; p < TARGET_PEGS; p++) {
+        for (let lvl = 0; lvl < MAX_PER_PEG; lvl++) {
+          const colorIndex = colorPool[poolIdx++];
+          const mesh = createDiskMesh(COLORS[colorIndex]);
+          const pos = pegPositionsLocal[p];
+          const y = plateTop + (diskThickness / 2) + lvl * stackSpacing;
+          mesh.position.set(pos.x, y, pos.z);
+          mesh.userData = { pegIndex: p, level: lvl };
+          scene.add(mesh);
+          disksRef.current[p].push({ colorIndex, mesh, peg: p });
+        }
+      }
+      // auxiliaries remain empty
     }
-    // auxiliary pegs (AUX_PEGS) remain empty initially
+
+    // Soft-reset helper: clear existing disks and reinitialize the pool without reloading the page.
+    function softReset() {
+      try {
+        const scene = sceneRef.current;
+        if (!scene) return;
+        // remove existing disk meshes (tracked in disksRef)
+        for (const arr of disksRef.current) {
+          for (const d of arr) {
+            try {
+              scene.remove(d.mesh);
+              if (d.mesh.geometry) d.mesh.geometry.dispose?.();
+              const m = d.mesh.material as any;
+              if (m) { if (Array.isArray(m)) m.forEach((mm: any) => mm.dispose?.()); else m.dispose?.(); }
+            } catch (e) { /* ignore */ }
+          }
+        }
+        // reset state
+        disksRef.current = Array.from({ length: PEG_COUNT }, () => []);
+        setScore(0);
+        setMessage(null);
+        selectedTowerRef.current = null;
+        // re-create disks
+        initDisks();
+        // reset seals and completed counters
+        sealedRef.current = Array.from({ length: PEG_COUNT }, () => false);
+        setSealed([...sealedRef.current]);
+        const completed = disksRef.current.reduce((c, _arr, idx) => c + (checkCompleted(idx) ? 1 : 0), 0);
+        setCompletedCount(completed);
+        updateSpecialEnabled();
+      } catch (e) { /* ignore */ }
+    }
 
     // check whether a peg is completed (has MAX_PER_PEG all of same color)
     function checkCompleted(pegIndex: number) {
@@ -896,6 +932,8 @@ export default function TowerGamePage() {
   animateShakeRef.current = animateShake;
 
     // initialize sealed array and check completed pegs on next frame
+    // Run a soft reset once on mount so the page is guaranteed to start from a clean game state
+    try { softReset(); } catch (e) { /* ignore */ }
     sealedRef.current = Array.from({ length: PEG_COUNT }, () => false);
     setSealed([...sealedRef.current]);
     setTimeout(() => {
