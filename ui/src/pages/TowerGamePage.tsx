@@ -144,7 +144,6 @@ export default function TowerGamePage() {
   const [sealed, setSealed] = useState<boolean[]>([]);
   const { playTone } = useAudio();
   const sealedRef = useRef<boolean[]>([]);
-  const softResetRef = useRef<null | (() => void)>(null);
 
   useEffect(() => {
     // prevent the page from scrolling while the game is mounted
@@ -170,7 +169,13 @@ export default function TowerGamePage() {
         // Subtract headerH to make room for top layout padding; for very thin screens
         // subtract a bit more so the content doesn't feel cramped vertically.
         const extraCompact = window.innerWidth < 420 ? 36 : 0;
-        const target = Math.max(260, Math.floor(window.innerHeight - top - footerH - headerH - extraCompact));
+        // Use visualViewport.height when available (mobile browsers animate the address bar and visualViewport
+        // reflects the visible area). Choose the smaller of innerHeight and visualViewport.height to be safe.
+        const vv = (window as any).visualViewport as VisualViewport | undefined;
+        const viewportH = vv && typeof vv.height === 'number' ? Math.min(window.innerHeight, vv.height) : window.innerHeight;
+        // On narrow/touch screens reserve an extra safe margin so the canvas doesn't extend under browser chrome
+        const initialSafeMargin = (window.innerWidth < 720 && isTouch) ? 56 : 0;
+        const target = Math.max(260, Math.floor(viewportH - top - footerH - headerH - extraCompact - initialSafeMargin));
         container.style.position = container.style.position || 'relative';
         container.style.height = `${target}px`;
         container.style.overflow = 'hidden';
@@ -544,8 +549,7 @@ export default function TowerGamePage() {
     // now that pegPositions exists, compute camera center
     computeContentCenterAndPosition();
 
-    // local alias for peg positions used by several helper functions below
-    const pegPositionsLocal = (scene as any).userData.pegPositions as { x: number; z: number }[];
+  // local alias for peg positions used by several helper functions below
 
     // raycaster setup
     const ray = new THREE.Raycaster();
@@ -598,72 +602,37 @@ export default function TowerGamePage() {
       return mesh;
     }
 
-    // disk initialization extracted so we can reuse it for soft resets (no page reload)
-    function initDisks() {
-      const scene = sceneRef.current!;
-      const pegPositionsLocal = (scene as any).userData.pegPositions as { x: number; z: number }[];
-      // reset tracking array
-      disksRef.current = Array.from({ length: PEG_COUNT }, () => []);
-      // build color pool: each color repeats MAX_PER_PEG times
-      const colorPool: number[] = [];
-      for (let c = 0; c < COLORS.length; c++) {
-        for (let k = 0; k < MAX_PER_PEG; k++) colorPool.push(c);
-      }
-      // shuffle pool
-      for (let i = colorPool.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const tmp = colorPool[i]; colorPool[i] = colorPool[j]; colorPool[j] = tmp;
-      }
-      // fill the TARGET_PEGS (first TARGET_PEGS indices) with MAX_PER_PEG disks each by popping from pool
-      let poolIdx = 0;
-      for (let p = 0; p < TARGET_PEGS; p++) {
-        for (let lvl = 0; lvl < MAX_PER_PEG; lvl++) {
-          const colorIndex = colorPool[poolIdx++];
-          const mesh = createDiskMesh(COLORS[colorIndex]);
-          const pos = pegPositionsLocal[p];
-          const y = plateTop + (diskThickness / 2) + lvl * stackSpacing;
-          mesh.position.set(pos.x, y, pos.z);
-          mesh.userData = { pegIndex: p, level: lvl };
-          scene.add(mesh);
-          disksRef.current[p].push({ colorIndex, mesh, peg: p });
-        }
-      }
-      // auxiliaries remain empty
-    }
+    // disks data
+    disksRef.current = Array.from({ length: PEG_COUNT }, () => []);
 
-  // Soft-reset helper: clear existing disks and reinitialize the pool without reloading the page.
-  function softReset() {
-      try {
-        const scene = sceneRef.current;
-        if (!scene) return;
-        // remove existing disk meshes (tracked in disksRef)
-        for (const arr of disksRef.current) {
-          for (const d of arr) {
-            try {
-              scene.remove(d.mesh);
-              if (d.mesh.geometry) d.mesh.geometry.dispose?.();
-              const m = d.mesh.material as any;
-              if (m) { if (Array.isArray(m)) m.forEach((mm: any) => mm.dispose?.()); else m.dispose?.(); }
-            } catch (e) { /* ignore */ }
-          }
-        }
-        // reset state
-        disksRef.current = Array.from({ length: PEG_COUNT }, () => []);
-        setScore(0);
-        setMessage(null);
-        selectedTowerRef.current = null;
-        // re-create disks
-        initDisks();
-        // reset seals and completed counters
-        sealedRef.current = Array.from({ length: PEG_COUNT }, () => false);
-        setSealed([...sealedRef.current]);
-        const completed = disksRef.current.reduce((c, _arr, idx) => c + (checkCompleted(idx) ? 1 : 0), 0);
-        setCompletedCount(completed);
-        updateSpecialEnabled();
-      } catch (e) { /* ignore */ }
+    // initialize disks: we should have NUM_COLORS * MAX_PER_PEG total disks
+    // per requirements, initially all disks are placed on the TARGET_PEGS (first row) with 4 of each color (random arrangement)
+  const pegPositionsLocal = (scene as any).userData.pegPositions as { x: number; z: number }[];
+    // build color pool: each color repeats MAX_PER_PEG times
+    const colorPool: number[] = [];
+    for (let c = 0; c < COLORS.length; c++) {
+      for (let k = 0; k < MAX_PER_PEG; k++) colorPool.push(c);
     }
-    // expose the softReset to outer scope so the Reset button can call it
-    try { softResetRef.current = softReset; } catch (e) { /* ignore */ }
+    // shuffle pool
+    for (let i = colorPool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = colorPool[i]; colorPool[i] = colorPool[j]; colorPool[j] = tmp;
+    }
+    // fill the TARGET_PEGS (first TARGET_PEGS indices) with 4 disks each by popping from pool
+    let poolIdx = 0;
+    for (let p = 0; p < TARGET_PEGS; p++) {
+      for (let lvl = 0; lvl < MAX_PER_PEG; lvl++) {
+        const colorIndex = colorPool[poolIdx++];
+        const mesh = createDiskMesh(COLORS[colorIndex]);
+        const pos = pegPositionsLocal[p];
+  const y = plateTop + (diskThickness / 2) + lvl * stackSpacing;
+        mesh.position.set(pos.x, y, pos.z);
+        mesh.userData = { pegIndex: p, level: lvl };
+        scene.add(mesh);
+        disksRef.current[p].push({ colorIndex, mesh, peg: p });
+      }
+    }
+    // auxiliary pegs (AUX_PEGS) remain empty initially
 
     // check whether a peg is completed (has MAX_PER_PEG all of same color)
     function checkCompleted(pegIndex: number) {
@@ -935,8 +904,6 @@ export default function TowerGamePage() {
   animateShakeRef.current = animateShake;
 
     // initialize sealed array and check completed pegs on next frame
-    // Run a soft reset once on mount so the page is guaranteed to start from a clean game state
-    try { softReset(); } catch (e) { /* ignore */ }
     sealedRef.current = Array.from({ length: PEG_COUNT }, () => false);
     setSealed([...sealedRef.current]);
     setTimeout(() => {
@@ -1259,10 +1226,15 @@ export default function TowerGamePage() {
   window.addEventListener('orientationchange', handleOrientation);
   // pageshow handles bfcache restores which sometimes preserve stale layout
   window.addEventListener('pageshow', handleOrientation);
+    // If visualViewport is available, listen for its resize events (address-bar show/hide) and refit
+    if ((window as any).visualViewport) {
+      try {
+        (window as any).visualViewport.addEventListener('resize', fitContainerToViewport);
+      } catch (e) { /* ignore */ }
+    }
 
     // cleanup
     return () => {
-      try { softResetRef.current = null; } catch (e) {}
       cancelAnimationFrame(rafId);
       renderer.domElement.removeEventListener('pointerdown', onPointer as any);
   window.removeEventListener('resize', onResize);
@@ -1270,6 +1242,9 @@ export default function TowerGamePage() {
       window.removeEventListener('resize', fitContainerToViewport);
   window.removeEventListener('orientationchange', handleOrientation);
   window.removeEventListener('pageshow', handleOrientation);
+      if ((window as any).visualViewport) {
+        try { (window as any).visualViewport.removeEventListener('resize', fitContainerToViewport); } catch (e) {}
+      }
   try { window.clearTimeout(t1); } catch (e) {}
   try { window.clearTimeout(t2); } catch (e) {}
   try { window.clearTimeout(t3); } catch (e) {}
@@ -1326,11 +1301,9 @@ export default function TowerGamePage() {
       playTone(240, 0.06, 'sine');
       showTransientMessage('Resetting...', 400);
     } catch (e) { /* ignore */ }
-    // call the in-memory reset (no full page reload)
+    // short delay so message and tone are perceived before reload
     setTimeout(() => {
-      try {
-        if (softResetRef.current) softResetRef.current();
-      } catch (e) { /* ignore */ }
+      try { window.location.reload(); } catch (e) { /* ignore */ }
     }, 420);
   }
 
