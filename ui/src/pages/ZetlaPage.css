@@ -137,6 +137,7 @@ body, html, #root {
   width: 100%;
   display: block;
   border-radius: 16px;
+  aspect-ratio: 425 / 875;
 }
 
 /* ── Pin-up items around the phone card ── */
