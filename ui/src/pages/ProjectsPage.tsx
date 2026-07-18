@@ -154,9 +154,12 @@ function ProjectsPage() {
             <Typography variant="caption" sx={{ color: 'var(--motif-text)', textAlign: 'center' }}>Play the 3D tower sorting game</Typography>
           </div>
         </Link>
-        <div className="motif-card" style={{ padding: 12, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 130, boxSizing: 'border-box' }}>
-          <Typography variant="h6" sx={{ color: 'var(--motif-text)', textAlign: 'center' }}>Coming Soon</Typography>
-        </div>
+        <Link to="/zetla" style={{ textDecoration: 'none', width: '100%' }}>
+          <div className="motif-card" role="button" tabIndex={0} style={{ padding: 12, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 130, boxSizing: 'border-box', cursor: 'pointer', background: 'linear-gradient(135deg, #1a1a2e, #16213e)' }}>
+            <Typography variant="h6" sx={{ color: '#a78bfa', textAlign: 'center', fontWeight: 700 }}>Zetla</Typography>
+            <Typography variant="caption" sx={{ color: '#8888aa', textAlign: 'center' }}>Android BYOK Chat App</Typography>
+          </div>
+        </Link>
       </Box>
     </Box>
   );

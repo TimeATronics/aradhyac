@@ -1,0 +1,714 @@
+/* ─── Reset global body/#root for this page ─── */
+body, html, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  place-items: stretch !important;
+  text-align: left !important;
+}
+
+/* ─── Base ─── */
+.zetla-page {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #fafaf7;
+  color: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.zetla-page * { box-sizing: border-box; }
+
+.zetla-page h1, .zetla-page h2 {
+  font-family: 'Source Serif Pro', 'Georgia', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ─── Nav ─── */
+.zetla-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem clamp(1.5rem, 4vw, 3rem);
+  background: rgba(250, 250, 247, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(26, 26, 46, 0.06);
+  transition: background 0.3s;
+}
+
+.zetla-nav-brand {
+  font-family: 'Source Serif Pro', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #1a1a2e;
+  letter-spacing: -0.01em;
+}
+
+.zetla-nav-links {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.zetla-nav-links a {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.2s, color 0.2s;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  background: rgba(26, 26, 46, 0.05);
+  font-family: 'Source Serif Pro', Georgia, serif;
+}
+
+.zetla-nav-links a:hover { color: #666; background: rgba(26, 26, 46, 0.09); }
+
+/* ─── Hero ─── */
+.zetla-hero {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 7rem 10vw 7rem 12vw;
+  position: relative;
+  background: #f8f7f4;
+}
+
+.zetla-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.zetla-hero-text { max-width: 500px; margin: 0 auto; }
+
+.zetla-hero-title {
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  margin: 0 0 1.2rem;
+  color: #1a1a2e;
+}
+
+.zetla-hero-subtitle {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  color: #5a5a72;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Phone card with tags pinned on it ── */
+.zetla-hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zetla-phone-card {
+  position: relative;
+  width: 280px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: visible;
+  box-shadow:
+    0 0 0 8px #ffffff,
+    0 0 0 9px rgba(26, 26, 46, 0.07),
+    0 28px 72px rgba(108, 99, 255, 0.2),
+    0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.zetla-hero-video {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+}
+
+/* ── Pin-up items around the phone card ── */
+.zetla-pin {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
+}
+
+.zetla-pin svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── Ribbon (top-left) ── */
+.zetla-pin-ribbon {
+  width: 140px;
+  top: 4%;
+  left: -55%;
+  transform: rotate(-6deg);
+}
+
+/* ── Newspaper cutout (top-right) ── */
+.zetla-pin-newspaper {
+  width: 160px;
+  top: -2%;
+  right: -50%;
+  transform: rotate(3deg);
+}
+
+/* ── Star sticker (bottom-left) ── */
+.zetla-pin-sticker {
+  width: 88px;
+  bottom: 18%;
+  left: -40%;
+  transform: rotate(10deg);
+}
+
+/* ── Ticket stub (bottom-right) ── */
+.zetla-pin-ticket {
+  width: 135px;
+  bottom: 6%;
+  right: -45%;
+  transform: rotate(-3deg);
+}
+
+/* ── Badge (mid-right) ── */
+.zetla-pin-badge {
+  width: 114px;
+  top: 38%;
+  right: -38%;
+  transform: rotate(6deg);
+}
+
+/* ── Handwritten note (mid-left) ── */
+.zetla-pin-handwritten {
+  width: 120px;
+  top: 42%;
+  left: -48%;
+  transform: rotate(-8deg);
+}
+
+/* ── Thumbtack ── */
+.zetla-tack {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.zetla-tack-head {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ff5c5c, #cc2222);
+  box-shadow:
+    inset 0 -2px 3px rgba(0,0,0,0.25),
+    0 1px 3px rgba(0,0,0,0.3);
+}
+
+.zetla-tack-shadow {
+  width: 8px;
+  height: 4px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 50%;
+  margin: 2px auto 0;
+}
+
+/* ── Mobile: scale pins down ── */
+@media (max-width: 900px) {
+  .zetla-pin-ribbon      { width: 110px; left: -40%; top: 2%; }
+  .zetla-pin-newspaper   { width: 130px; right: -35%; top: -2%; }
+  .zetla-pin-sticker     { width: 70px; left: -30%; bottom: 22%; }
+  .zetla-pin-ticket      { width: 105px; right: -30%; bottom: 8%; }
+  .zetla-pin-badge       { width: 93px; right: -28%; top: 40%; }
+  .zetla-pin-handwritten { width: 100px; left: -35%; top: 44%; }
+}
+
+@media (max-width: 480px) {
+  .zetla-pin-ribbon      { width: 90px; left: -30%; }
+  .zetla-pin-newspaper   { width: 110px; right: -25%; }
+  .zetla-pin-sticker     { width: 58px; left: -20%; }
+  .zetla-pin-ticket      { width: 85px; right: -22%; }
+  .zetla-pin-badge       { width: 75px; right: -20%; }
+  .zetla-pin-handwritten { width: 82px; left: -25%; }
+}
+
+/* ─── Feature sections ─── */
+.zetla-feature-bg {
+  width: 100%;
+}
+
+.zetla-feature-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 5rem 8vw;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+.zetla-feature-section.is-flipped .zetla-feature-text { order: 2; }
+.zetla-feature-section.is-flipped .zetla-feature-img { order: 1; }
+
+.zetla-feature-text {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.zetla-feature-eyebrow {
+  display: inline-block;
+  font-family: 'Source Serif Pro', Georgia, serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: #6C63FF;
+  margin-bottom: 0.5rem;
+}
+
+.zetla-feature-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  margin: 0 0 0.8rem;
+  color: #1a1a2e;
+}
+
+.zetla-feat-desc {
+  font-size: 1.05rem;
+  color: #3a3a52;
+  line-height: 1.5;
+  margin: 0 0 0.5rem;
+}
+
+.zetla-feat-detail {
+  font-size: 0.9rem;
+  color: #77778a;
+  margin: 0;
+}
+
+.zetla-feature-img {
+  display: flex;
+  justify-content: center;
+}
+
+.zetla-feature-img-carousel {
+  flex-direction: column;
+  align-items: center;
+}
+
+.zetla-feature-img-carousel .zetla-feature-img-inner {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  overflow: hidden;
+}
+
+.zetla-feature-img-inner {
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgba(26, 26, 46, 0.04),
+    0 16px 48px rgba(108, 99, 255, 0.18),
+    0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.zetla-feature-img-inner img {
+  display: block;
+  width: 280px;
+  height: auto;
+  aspect-ratio: 425 / 875;
+  border-radius: 14px;
+}
+
+/* ─── Carousel (themes) ─── */
+.zetla-carousel-stack {
+  position: relative;
+  width: 280px;
+  aspect-ratio: 425 / 875;
+  will-change: transform;
+}
+
+.zetla-carousel-stack-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  pointer-events: none;
+  display: block;
+  will-change: opacity;
+}
+
+.zetla-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.zetla-carousel-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: #77778a;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.zetla-carousel-btn:hover { color: #1a1a2e; }
+.zetla-carousel-btn:focus,
+.zetla-carousel-btn:focus-visible { outline: none; }
+
+.zetla-carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.zetla-carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(26, 26, 46, 0.12);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.zetla-carousel-dot.is-active { background: #6C63FF; }
+.zetla-carousel-dot:hover { background: rgba(108, 99, 255, 0.4); }
+
+/* ─── Features table ─── */
+.zetla-table-bg {
+  width: 100%;
+  background: #fafaf7;
+}
+
+.zetla-table-section {
+  padding: 5rem 6vw 6rem;
+  max-width: 850px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.zetla-section-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin: 0 0 0.75rem;
+  color: #1a1a2e;
+}
+
+.zetla-section-subtitle {
+  font-size: 1.05rem;
+  color: #5a5a72;
+  margin: 0 0 2.5rem;
+}
+
+.zetla-table {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(26, 26, 46, 0.1);
+}
+
+.zetla-table-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 0.5rem;
+  border-bottom: 1px solid rgba(26, 26, 46, 0.1);
+  transition: background 0.2s;
+}
+
+.zetla-table-row:hover { background: rgba(108, 99, 255, 0.04); }
+
+.zetla-table-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1a2e;
+}
+
+.zetla-table-detail {
+  font-size: 0.88rem;
+  color: #5a5a72;
+}
+
+/* ─── Download CTA ─── */
+.zetla-cta {
+  padding: 5rem 6vw 5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a2e, #2d1b69, #1a1a2e);
+  color: #ffffff;
+}
+
+.zetla-cta-title {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  margin: 0 0 0.8rem;
+  color: #ffffff;
+}
+
+.zetla-cta-subtitle {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 0 2.5rem;
+}
+
+.zetla-cta-logo {
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+}
+
+.zetla-cta-logo::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(108,99,255,0.25) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.zetla-cta-logo img {
+  width: 72px;
+  height: 72px;
+  display: block;
+  border-radius: 10px;
+  opacity: 0.85;
+  position: relative;
+  z-index: 1;
+}
+
+.zetla-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.zetla-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.zetla-btn-primary {
+  background: #ffffff;
+  color: #1a1a2e;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+.zetla-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+.zetla-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.zetla-btn-secondary:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ─── FAQ ─── */
+.zetla-faq-bg {
+  width: 100%;
+  background: #f8f7f4;
+}
+
+.zetla-faq-section {
+  padding: 5rem 6vw 4rem;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.zetla-faq-list {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.zetla-faq-item {
+  border-bottom: 1px solid rgba(26, 26, 46, 0.1);
+}
+
+.zetla-faq-item:focus,
+.zetla-faq-item:focus-visible {
+  outline: none;
+}
+
+.zetla-faq-q {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.3rem 0 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a2e;
+  text-align: left;
+  gap: 1rem;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  outline: none;
+}
+
+.zetla-faq-q:hover { color: #555; }
+
+.zetla-faq-q:focus,
+.zetla-faq-q:focus-visible,
+.zetla-faq-q:focus-within {
+  outline: none;
+  box-shadow: none;
+}
+
+.zetla-faq-q span:first-child {
+  display: flex;
+  align-items: center;
+}
+
+.zetla-faq-chevron {
+  font-size: 1.3rem;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.zetla-faq-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+.zetla-faq-a-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.zetla-faq-item.is-open .zetla-faq-a-wrap {
+  grid-template-rows: 1fr;
+}
+
+.zetla-faq-a {
+  overflow: hidden;
+}
+
+.zetla-faq-a p {
+  padding: 0.5rem 0 1.3rem;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #5a5a72;
+  line-height: 1.6;
+}
+
+/* ─── Footer ─── */
+.zetla-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 6vw;
+  background: #f0eef8;
+  font-size: 0.78rem;
+  color: #77778a;
+  font-family: 'Source Serif Pro', Georgia, serif;
+}
+
+.zetla-footer a {
+  color: #6C63FF;
+  text-decoration: none;
+}
+
+.zetla-footer a:hover { text-decoration: underline; }
+
+.zetla-footer-sep { opacity: 0.4; }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .zetla-nav-links { gap: 0.25rem; }
+  .zetla-nav-links a { font-size: 0.72rem; padding: 0.25rem 0.55rem; }
+
+  .zetla-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .zetla-hero-text { margin: 0 auto; }
+  .zetla-phone-card { width: 220px; }
+
+  .zetla-feature-section,
+  .zetla-feature-section.is-flipped {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 4rem 6vw;
+    text-align: center;
+  }
+
+  .zetla-feature-section.is-flipped .zetla-feature-text { order: 1; }
+  .zetla-feature-section.is-flipped .zetla-feature-img { order: 2; }
+  .zetla-feature-text { margin: 0 auto; }
+
+  .zetla-table-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+  .zetla-table-detail { font-size: 0.82rem; }
+}
+
+@media (max-width: 480px) {
+  .zetla-hero { padding-top: 6rem; }
+  .zetla-hero-title { font-size: 2.2rem; }
+  .zetla-phone-card { width: 190px; }
+  .zetla-feature-img-inner img { width: 180px; }
+  .zetla-carousel-stack { width: 180px; }
+}
