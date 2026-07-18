@@ -314,7 +314,7 @@ export default function ZetlaPage() {
     });
   }, { scope: pageRef });
 
-  const githubBase = 'https://github.com/aradhya-chakrabarti/zetla';
+  const githubBase = 'https://github.com/TimeATronics/Zetla';
 
   return (
     <div ref={pageRef} className="zetla-page">
@@ -548,7 +548,7 @@ export default function ZetlaPage() {
         </p>
         <div className="zetla-cta-buttons zetla-cta-el">
           <a
-            href={`${githubBase}/releases/latest/download/app-release-arm64.apk`}
+            href={`${githubBase}/releases/download/v0.1.0-alpha/app-arm64-v8a-release.apk`}
             target="_blank"
             rel="noopener noreferrer"
             className="zetla-btn zetla-btn-primary"
@@ -559,7 +559,7 @@ export default function ZetlaPage() {
             arm64-v8a
           </a>
           <a
-            href={`${githubBase}/releases/latest/download/app-release-armv7.apk`}
+            href={`${githubBase}/releases/download/v0.1.0-alpha/app-armeabi-v7a-release.apk`}
             target="_blank"
             rel="noopener noreferrer"
             className="zetla-btn zetla-btn-secondary"
@@ -587,8 +587,6 @@ export default function ZetlaPage() {
       {/*  Footer  */}
       <footer className="zetla-footer">
         <span>&copy; 2026 Aradhya Chakrabarti</span>
-        <span className="zetla-footer-sep">&middot;</span>
-        <span>MIT License</span>
         <span className="zetla-footer-sep">&middot;</span>
         <a href="https://aradhyac.com" target="_blank" rel="noopener noreferrer">aradhyac.com</a>
       </footer>
