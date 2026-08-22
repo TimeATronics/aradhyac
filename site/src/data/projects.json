@@ -22,5 +22,11 @@
     "description": "An efficient music player for the TrimUI Brick.",
     "repo": "https://github.com/TimeATronics/music_player",
     "link": ""
+  },
+  {
+    "title": "autotypeset",
+    "description": "Postgrad Notes to LaTeX",
+    "repo": "https://github.com/TimeATronics/autotypeset",
+    "link": ""
   }
 ]
