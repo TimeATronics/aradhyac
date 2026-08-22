@@ -74,7 +74,6 @@ function render() {
   }
   document.querySelectorAll('header nav a').forEach((a) => a.classList.toggle('active', a.hash.slice(1) === section));
   $('section-title').textContent = section.charAt(0).toUpperCase() + section.slice(1);
-  $('save-bar').classList.toggle('hidden', section === 'blogs');
   $('content').innerHTML = '';
   if (section === 'projects') renderProjects();
   else if (section === 'experience') renderExperience();
