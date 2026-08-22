@@ -1,26 +1,39 @@
 [
   {
-    "position": "Position 1",
-    "organization": "Organization",
-    "period": "Month Year - Month Year",
-    "points": ["Work done - point 1", "Work done - point 2"]
+    "position": "Product Development Intern",
+    "organization": "HighRadius",
+    "period": "May 2025 - Jun 2026",
+    "points": [
+      "Worked on revamping the QA stack for multiple teams. Built a GenAI platform for generating and running UI tests, using LangGraph, AWS Bedrock, and Spring Boot on Kubernetes.",
+      "Made a custom Electron IDE that writes automation scripts while you record, plus a Python port of the JaCoCo coverage agent.",
+      "Wired Jenkins pipelines to pull insights from test logs, and built real-time dashboards in React."
+    ]
   },
   {
-    "position": "Position 2",
-    "organization": "Organization",
-    "period": "Month Year - Month Year",
-    "points": ["Work done - point 1", "Work done - point 2"]
+    "position": "Summer Intern",
+    "organization": "Centre for Career Development, NIT Calicut",
+    "period": "May 2025 - Jul 2025",
+    "points": [
+      "Fine-tuned a BERT model to extract UML class diagram elements from functional requirements in SRS documents, and to detect code smells.",
+      "Annotated requirement specification documents from the PURE dataset using Label Studio."
+    ]
   },
   {
-    "position": "Position 3",
-    "organization": "Organization",
-    "period": "Month Year - Month Year",
-    "points": ["Work done - point 1", "Work done - point 2"]
+    "position": "Application Development Intern",
+    "organization": "Volcan Vision and Automation",
+    "period": "Apr 2025 - Jul 2025",
+    "points": [
+      "Built a real-time image inspection application in Python with PyQt5 and OpenCV, designing the interface and leading the development.",
+      "Implemented barcode and OCR scanning, edge detection, color inspection, and distance measurement, integrated with a high-speed camera setup for live results."
+    ]
   },
   {
-    "position": "Position 4",
-    "organization": "Organization",
-    "period": "Month Year - Month Year",
-    "points": ["Work done - point 1", "Work done - point 2"]
+    "position": "Research Intern",
+    "organization": "Indian Summer School on Cellular Automata",
+    "period": "May 2024 - Jul 2024",
+    "points": [
+      "Two-month program exploring novel applications of cellular automata.",
+      "Worked on opinion dynamics modeling through fuzzy cellular automata, which became a submission to ASCAT 2025."
+    ]
   }
 ]
