@@ -90,21 +90,23 @@ const pager = (id: string, n: number) => `
     <div class="section-head">
       <h2>Resources</h2>
     </div>
-    <table>
-      <thead>
-        <tr><th>Subject</th><th>Course</th><th>Institution</th><th>Link</th></tr>
-      </thead>
-      <tbody id="resources-list">
-        {resources.slice(0, PAGE_SIZE).map((r) => (
-          <tr>
-            <td>{r.subject}</td>
-            <td>{r.course_number}</td>
-            <td>{r.institution}</td>
-            <td><a href={r.url}>notes</a></td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Subject</th><th>Course</th><th>Institution</th><th>Link</th></tr>
+        </thead>
+        <tbody id="resources-list">
+          {resources.slice(0, PAGE_SIZE).map((r) => (
+            <tr>
+              <td>{r.subject}</td>
+              <td>{r.course_number}</td>
+              <td>{r.institution}</td>
+              <td><a href={r.url}>notes</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
     <div set:html={pager('resources', resources.length)}></div>
     <script type="application/json" id="resources-data" set:html={json(resources)}></script>
   </section>
@@ -114,21 +116,23 @@ const pager = (id: string, n: number) => `
       <h2>Publications</h2>
       <button id="pub-refresh" type="button" class="icon-btn" title="Refresh from ORCID" aria-label="Refresh from ORCID">&#10227;</button>
     </div>
-    <table>
-      <thead>
-        <tr><th>Title</th><th>Venue</th><th>Year</th><th>Link</th></tr>
-      </thead>
-      <tbody id="publications-list">
-        {publications.slice(0, PAGE_SIZE).map((p) => (
-          <tr>
-            <td>{p.title}</td>
-            <td>{p.venue}</td>
-            <td>{p.year}</td>
-            <td><a href={p.url ?? `https://doi.org/${p.doi}`}>doi</a></td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Title</th><th>Venue</th><th>Year</th><th>Link</th></tr>
+        </thead>
+        <tbody id="publications-list">
+          {publications.slice(0, PAGE_SIZE).map((p) => (
+            <tr>
+              <td>{p.title}</td>
+              <td>{p.venue}</td>
+              <td>{p.year}</td>
+              <td><a href={p.url ?? `https://doi.org/${p.doi}`}>doi</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
     <div set:html={pager('publications', publications.length)}></div>
     <script type="application/json" id="publications-data" set:html={json(publications)}></script>
   </section>
