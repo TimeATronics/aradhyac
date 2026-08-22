@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Real-Time Hybrid Retrieval in Hyperbolic Space for Retrieval-Augmented Generation on Edge Devices",
+    "type": "preprint",
+    "year": "2026",
+    "venue": "arXiv",
+    "doi": "10.48550/ARXIV.2608.01450",
+    "url": "https://arxiv.org/abs/2608.01450"
+  },
+  {
+    "title": "A WASM-Subset Stack Architecture for Low-cost FPGAs using Open-Source EDA Flows",
+    "type": "preprint",
+    "year": "2025",
+    "venue": "arXiv",
+    "doi": "10.48550/ARXIV.2512.00974",
+    "url": "https://arxiv.org/abs/2512.00974"
+  },
+  {
+    "title": "Exploring Opinion Dynamics Through Social Influence, Online Communication, and Leadership: A Fuzzy Cellular Automaton Approach",
+    "type": "book-chapter",
+    "year": "2025",
+    "venue": "Communications in Computer and Information Science",
+    "doi": "10.1007/978-3-031-94121-4_10",
+    "url": "http://dx.doi.org/10.1007/978-3-031-94121-4_10"
+  },
+  {
+    "title": "Quantum-Accelerated Feature Selection for Edge-Enabled Perception in Connected and Autonomous Vehicles",
+    "type": "journal-article",
+    "year": "2025",
+    "venue": "IEEE Access",
+    "doi": "10.1109/ACCESS.2025.3634717",
+    "url": "https://doi.org/10.1109/ACCESS.2025.3634717"
+  }
+]
