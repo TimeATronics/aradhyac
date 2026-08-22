@@ -1,12 +1,13 @@
 {
   "name": "Aradhya Chakrabarti",
-  "tagline": "Student | Developer",
+  "tagline": "postgrad student, builder",
   "about": [
-    "Hello"
+    "I am a postgrad student in Computer Science at IIIT Bangalore, just into my M.Tech after a year of interning at HighRadius, where I built AI tooling for QA teams.",
+    "When I am not studying I build things for the fun of it, Android apps and compiler experiments mostly, and record cello covers that end up in the Bandcamp player below."
   ],
   "links": {
     "GitHub": "https://github.com/TimeATronics",
     "LinkedIn": "https://linkedin.com/in/aradhyachakrabarti",
-    "Google Scholar": "https://scholar.google.com/citations?user=bV4KYwEAAAAJ&hl=en&authuser=1"
+    "ORCID": "https://orcid.org/0009-0003-3450-5728"
   }
 }
