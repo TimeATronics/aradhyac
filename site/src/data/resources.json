@@ -1,14 +1,14 @@
 [
   {
     "subject": "Time Series Forecasting",
-    "course_number": "",
-    "institution": "",
+    "course_number": "CS30014",
+    "institution": "KIIT Bhubaneswar",
     "url": "https://aradhyac-assets.s3.us-east-1.amazonaws.com/resources/time-series-forecasting.pdf"
   },
   {
     "subject": "Agile Software Development",
-    "course_number": "",
-    "institution": "",
+    "course_number": "CS40006",
+    "institution": "KIIT Bhubaneswar",
     "url": "https://aradhyac-assets.s3.us-east-1.amazonaws.com/resources/agile-software-development.pdf"
   }
 ]
