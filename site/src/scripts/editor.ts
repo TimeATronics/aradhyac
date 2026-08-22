@@ -30,6 +30,31 @@ function field(label: string, value: any, placeholder = '', type = 'input') {
   return `<label>${label}</label><input data-f="1" value="${esc(value)}" placeholder="${placeholder}" />`;
 }
 
+const CARD_ACTIONS = (i: number, total: number) => `
+  <span class="card-actions">
+    <button type="button" class="move" data-i="${i}">Move To</button>
+    <button type="button" class="danger remove">Remove</button>
+  </span>`;
+
+function wireMove(actionsEl: HTMLElement, i: number, list: any[], rerender: () => void) {
+  actionsEl.querySelector<HTMLButtonElement>('.move')?.addEventListener('click', () => {
+    actionsEl.innerHTML = `
+      <input type="number" class="move-input" min="1" max="${list.length}" value="${i + 1}" aria-label="New position" />
+      <button type="button" class="move-go">Go</button>`;
+    const input = actionsEl.querySelector<HTMLInputElement>('.move-input')!;
+    const apply = () => {
+      const target = Math.max(1, Math.min(list.length, Math.round(Number(input.value) || 1))) - 1;
+      const [item] = list.splice(i, 1);
+      list.splice(target, 0, item);
+      rerender();
+    };
+    actionsEl.querySelector<HTMLButtonElement>('.move-go')!.addEventListener('click', apply);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') apply(); });
+    input.focus();
+    input.select();
+  });
+}
+
 /* ---------- auth ---------- */
 
 async function checkAuth() {
@@ -162,7 +187,7 @@ function renderCards() {
     <div class="card" data-i="${i}">
       <div class="card-head">
         <span class="muted">#${i + 1}</span>
-        <button class="danger remove">Remove</button>
+        ${CARD_ACTIONS(i, data.projects.length)}
       </div>
       ${field('Title *', p.title)}
       ${field('Description *', p.description, '', 'textarea')}
@@ -182,6 +207,7 @@ function renderCards() {
       data.projects.splice(i, 1);
       renderCards();
     });
+    wireMove(card.querySelector('.card-actions')!, i, data.projects, renderCards);
   });
 
   $('add-project').onclick = () => {
@@ -198,7 +224,7 @@ function renderExperience() {
   const list = $('exp-cards');
   list.innerHTML = data.experience.map((e: any, i: number) => `
     <div class="card" data-i="${i}">
-      <div class="card-head"><span class="muted">#${i + 1}</span><button class="danger remove">Remove</button></div>
+      <div class="card-head"><span class="muted">#${i + 1}</span>${CARD_ACTIONS(i, data.experience.length)}</div>
       <div class="row">
         <div>${field('Position *', e.position)}</div>
         <div>${field('Organization *', e.organization)}</div>
@@ -214,6 +240,7 @@ function renderExperience() {
       else el.oninput = () => { data.experience[i].points = el.value.split('\n').map((s) => s.trim()).filter(Boolean); };
     });
     card.querySelector('.remove')!.addEventListener('click', () => { data.experience.splice(i, 1); renderExperience(); });
+    wireMove(card.querySelector('.card-actions')!, i, data.experience, renderExperience);
   });
 
   $('add-exp').onclick = () => {
@@ -290,7 +317,7 @@ function renderResources() {
         <td><input data-f="1" value="${esc(r.course_number)}" /></td>
         <td><input data-f="2" value="${esc(r.institution)}" /></td>
         <td><input data-f="3" value="${esc(r.url)}" /></td>
-        <td><button class="danger remove">Remove</button></td>
+        <td class="row-actions"><button type="button" class="move">Move To</button><button type="button" class="danger remove">Remove</button></td>
       </tr>`).join('');
     $('res-rows').querySelectorAll('tr').forEach((tr) => {
       const i = Number((tr as HTMLElement).dataset.i);
@@ -301,6 +328,7 @@ function renderResources() {
         };
       });
       tr.querySelector('.remove')!.addEventListener('click', () => { data.resources.splice(i, 1); renderRows(); });
+      wireMove(tr.querySelector('.row-actions')!, i, data.resources, renderRows);
     });
   };
   renderRows();
@@ -319,7 +347,7 @@ function renderMusic() {
   const renderRows = () => {
     $('music-rows').innerHTML = data.music.map((m: any, i: number) => `
       <div class="card" data-i="${i}">
-        <div class="card-head"><span class="muted">#${i + 1}</span><button class="danger remove">Remove</button></div>
+        <div class="card-head"><span class="muted">#${i + 1}</span>${CARD_ACTIONS(i, data.music.length)}</div>
         ${field('Title *', m.title)}
         ${field('Bandcamp embed URL *', m.url, 'https://bandcamp.com/EmbeddedPlayer/track=...')}
       </div>`).join('');
@@ -329,6 +357,7 @@ function renderMusic() {
         el.oninput = () => { data.music[i][['title', 'url'][k]] = el.value; };
       });
       card.querySelector('.remove')!.addEventListener('click', () => { data.music.splice(i, 1); renderRows(); });
+      wireMove(card.querySelector('.card-actions')!, i, data.music, renderRows);
     });
   };
   renderRows();

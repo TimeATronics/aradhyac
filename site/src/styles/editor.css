@@ -47,6 +47,10 @@ input, select { overflow-wrap: break-word; }
 
 .card { border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.85rem; margin-bottom: 0.6rem; }
 .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem; }
+.card-actions { display: flex; gap: 0.4rem; align-items: center; }
+.card-actions .move-input { width: 3.5rem; padding: 0.2rem 0.4rem; }
+.row-actions { display: flex; gap: 0.4rem; align-items: center; white-space: nowrap; }
+.row-actions .move-input { width: 3.5rem; padding: 0.2rem 0.4rem; }
 .muted { color: var(--muted); font-size: 0.85rem; }
 .hidden { display: none; }
 
