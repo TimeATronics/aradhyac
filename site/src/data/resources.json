@@ -1,0 +1,14 @@
+[
+  {
+    "subject": "Machine Learning",
+    "course_number": "AIT511",
+    "institution": "University",
+    "url": "https://aradhyac-assets.s3.us-east-1.amazonaws.com/resources/ait511-notes.pdf"
+  },
+  {
+    "subject": "ABC",
+    "course_number": "ABC",
+    "institution": "ABC",
+    "url": "ABC"
+  }
+]
