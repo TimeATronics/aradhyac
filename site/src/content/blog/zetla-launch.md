@@ -1,7 +1,7 @@
 ---
 title: "Zetla is out"
 pubDate: 2026-07-15
-description: "Local-first AI chat for Android — bring your own API keys."
+description: "Local-first AI chat for Android - bring your own API keys."
 tags: ["android", "ai"]
 ---
 

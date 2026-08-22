@@ -68,6 +68,7 @@ async function load() {
 window.addEventListener('hashchange', () => { section = location.hash.slice(1) || 'projects'; render(); });
 
 function render() {
+  if (section === 'about') section = 'profile';
   if (!['projects', 'experience', 'profile', 'resources', 'music', 'blogs'].includes(section)) {
     section = 'projects';
   }
@@ -141,6 +142,7 @@ function renderProjects() {
   fetch('https://api.github.com/users/TimeATronics/repos?sort=updated&per_page=100')
     .then((r) => r.json())
     .then((list) => {
+      if (!document.getElementById('repo-rows')) return;
       repos = list.map((x: any) => ({
         name: x.name,
         html_url: x.html_url,
@@ -148,7 +150,9 @@ function renderProjects() {
       }));
       renderRepoTable();
     })
-    .catch((e) => status('Failed to load repos: ' + e.message, 'err'));
+    .catch((e) => {
+      if (document.getElementById('repo-rows')) status('Failed to load repos: ' + e.message, 'err');
+    });
 
   renderCards();
 }

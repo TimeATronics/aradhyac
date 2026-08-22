@@ -7,7 +7,7 @@ import { randomUUID } from 'node:crypto';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 8080);
 
-// optional local-only env file (site/tools/edit-service/.env) — never committed, never deployed
+// optional local-only env file (site/tools/edit-service/.env) - never committed, never deployed
 try {
   for (const line of readFileSync(join(HERE, '.env'), 'utf8').split('\n')) {
     const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
@@ -214,7 +214,7 @@ createServer(async (req, res) => {
     if (path === '/api/edit/oauth/callback') {
       const state = url.searchParams.get('state');
       const st = oauthStates.get(state ?? '');
-      if (!st || Date.now() > st.exp) return json(res, 400, { ok: false, message: 'OAuth state expired — try again.' });
+      if (!st || Date.now() > st.exp) return json(res, 400, { ok: false, message: 'OAuth state expired - try again.' });
       oauthStates.delete(state);
       const code = url.searchParams.get('code');
       if (!code) return json(res, 400, { ok: false, message: 'GitHub did not return a code.' });

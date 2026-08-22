@@ -22,6 +22,14 @@ button:disabled { opacity: 0.5; cursor: default; }
 
 main { max-width: 900px; margin: 0 auto; padding: 1rem 1rem 3rem; }
 .toolbar { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; }
+#save-bar {
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  position: sticky;
+  bottom: 0;
+  background: var(--bg);
+}
 .toolbar h2 { font-size: 1rem; margin: 0 auto 0 0; }
 #status { color: var(--muted); font-size: 0.85rem; }
 #status.ok { color: #2e7d32; }

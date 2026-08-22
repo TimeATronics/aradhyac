@@ -2,25 +2,25 @@
   {
     "position": "Position 1",
     "organization": "Organization",
-    "period": "Month Year – Month Year",
-    "points": ["Work done — point 1", "Work done — point 2"]
+    "period": "Month Year - Month Year",
+    "points": ["Work done - point 1", "Work done - point 2"]
   },
   {
     "position": "Position 2",
     "organization": "Organization",
-    "period": "Month Year – Month Year",
-    "points": ["Work done — point 1", "Work done — point 2"]
+    "period": "Month Year - Month Year",
+    "points": ["Work done - point 1", "Work done - point 2"]
   },
   {
     "position": "Position 3",
     "organization": "Organization",
-    "period": "Month Year – Month Year",
-    "points": ["Work done — point 1", "Work done — point 2"]
+    "period": "Month Year - Month Year",
+    "points": ["Work done - point 1", "Work done - point 2"]
   },
   {
     "position": "Position 4",
     "organization": "Organization",
-    "period": "Month Year – Month Year",
-    "points": ["Work done — point 1", "Work done — point 2"]
+    "period": "Month Year - Month Year",
+    "points": ["Work done - point 1", "Work done - point 2"]
   }
 ]

@@ -1,4 +1,4 @@
-/* ─── Reset global body/#root for this page ─── */
+/* --- Reset global body/#root for this page --- */
 body, html, #root {
   margin: 0 !important;
   padding: 0 !important;
@@ -10,7 +10,7 @@ body, html, #root {
   text-align: left !important;
 }
 
-/* ─── Base ─── */
+/* --- Base --- */
 .zetla-page {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #fafaf7;
@@ -29,7 +29,7 @@ body, html, #root {
   line-height: 1.1;
 }
 
-/* ─── Nav ─── */
+/* --- Nav --- */
 .zetla-nav {
   position: fixed;
   top: 0;
@@ -75,7 +75,7 @@ body, html, #root {
 
 .zetla-nav-links a:hover { color: #666; background: rgba(26, 26, 46, 0.09); }
 
-/* ─── Hero ─── */
+/* --- Hero --- */
 .zetla-hero {
   min-height: 100vh;
   width: 100%;
@@ -113,7 +113,7 @@ body, html, #root {
   margin: 0;
 }
 
-/* ── Phone card with tags pinned on it ── */
+/* -- Phone card with tags pinned on it -- */
 .zetla-hero-visual {
   display: flex;
   justify-content: center;
@@ -140,7 +140,7 @@ body, html, #root {
   aspect-ratio: 425 / 875;
 }
 
-/* ── Pin-up items around the phone card ── */
+/* -- Pin-up items around the phone card -- */
 .zetla-pin {
   position: absolute;
   z-index: 3;
@@ -154,7 +154,7 @@ body, html, #root {
   height: auto;
 }
 
-/* ── Ribbon (top-left) ── */
+/* -- Ribbon (top-left) -- */
 .zetla-pin-ribbon {
   width: 140px;
   top: 4%;
@@ -162,7 +162,7 @@ body, html, #root {
   transform: rotate(-6deg);
 }
 
-/* ── Newspaper cutout (top-right) ── */
+/* -- Newspaper cutout (top-right) -- */
 .zetla-pin-newspaper {
   width: 160px;
   top: -2%;
@@ -170,7 +170,7 @@ body, html, #root {
   transform: rotate(3deg);
 }
 
-/* ── Star sticker (bottom-left) ── */
+/* -- Star sticker (bottom-left) -- */
 .zetla-pin-sticker {
   width: 88px;
   bottom: 18%;
@@ -178,7 +178,7 @@ body, html, #root {
   transform: rotate(10deg);
 }
 
-/* ── Ticket stub (bottom-right) ── */
+/* -- Ticket stub (bottom-right) -- */
 .zetla-pin-ticket {
   width: 135px;
   bottom: 6%;
@@ -186,7 +186,7 @@ body, html, #root {
   transform: rotate(-3deg);
 }
 
-/* ── Badge (mid-right) ── */
+/* -- Badge (mid-right) -- */
 .zetla-pin-badge {
   width: 114px;
   top: 38%;
@@ -194,7 +194,7 @@ body, html, #root {
   transform: rotate(6deg);
 }
 
-/* ── Handwritten note (mid-left) ── */
+/* -- Handwritten note (mid-left) -- */
 .zetla-pin-handwritten {
   width: 120px;
   top: 42%;
@@ -202,7 +202,7 @@ body, html, #root {
   transform: rotate(-8deg);
 }
 
-/* ── Thumbtack ── */
+/* -- Thumbtack -- */
 .zetla-tack {
   position: absolute;
   top: -6px;
@@ -229,7 +229,7 @@ body, html, #root {
   margin: 2px auto 0;
 }
 
-/* ── Mobile: scale pins down ── */
+/* -- Mobile: scale pins down -- */
 @media (max-width: 900px) {
   .zetla-pin-ribbon      { width: 110px; left: -40%; top: 2%; }
   .zetla-pin-newspaper   { width: 130px; right: -35%; top: -2%; }
@@ -248,7 +248,7 @@ body, html, #root {
   .zetla-pin-handwritten { width: 82px; left: -25%; }
 }
 
-/* ─── Feature sections ─── */
+/* --- Feature sections --- */
 .zetla-feature-bg {
   width: 100%;
 }
@@ -337,7 +337,7 @@ body, html, #root {
   border-radius: 14px;
 }
 
-/* ─── Carousel (themes) ─── */
+/* --- Carousel (themes) --- */
 .zetla-carousel-stack {
   position: relative;
   width: 280px;
@@ -405,7 +405,7 @@ body, html, #root {
 .zetla-carousel-dot.is-active { background: #6C63FF; }
 .zetla-carousel-dot:hover { background: rgba(108, 99, 255, 0.4); }
 
-/* ─── Features table ─── */
+/* --- Features table --- */
 .zetla-table-bg {
   width: 100%;
   background: #fafaf7;
@@ -458,7 +458,7 @@ body, html, #root {
   color: #5a5a72;
 }
 
-/* ─── Download CTA ─── */
+/* --- Download CTA --- */
 .zetla-cta {
   padding: 5rem 6vw 5rem;
   text-align: center;
@@ -555,7 +555,7 @@ body, html, #root {
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* ─── FAQ ─── */
+/* --- FAQ --- */
 .zetla-faq-bg {
   width: 100%;
   background: #f8f7f4;
@@ -654,7 +654,7 @@ body, html, #root {
   line-height: 1.6;
 }
 
-/* ─── Footer ─── */
+/* --- Footer --- */
 .zetla-footer {
   display: flex;
   justify-content: center;
@@ -676,7 +676,7 @@ body, html, #root {
 
 .zetla-footer-sep { opacity: 0.4; }
 
-/* ─── Responsive ─── */
+/* --- Responsive --- */
 @media (max-width: 900px) {
   .zetla-nav-links { gap: 0.25rem; }
   .zetla-nav-links a { font-size: 0.72rem; padding: 0.25rem 0.55rem; }

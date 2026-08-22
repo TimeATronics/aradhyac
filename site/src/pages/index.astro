@@ -162,7 +162,9 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
   </script>
   <script is:inline>
     if (location.search.includes('edit')) {
+      const skip = ['publications', 'contact'];
       document.querySelectorAll('main section').forEach((s) => {
+        if (skip.includes(s.id)) return;
         const btn = document.createElement('a');
         btn.className = 'edit-icon';
         btn.href = '/edit#' + s.id;

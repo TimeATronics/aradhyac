@@ -1,18 +1,18 @@
 [
   {
     "title": "Tower Game",
-    "description": "A color-sorting puzzle built with three.js — play it right here.",
+    "description": "A color-sorting puzzle built with three.js - play it right here.",
     "link": "/tower"
   },
   {
     "title": "Zetla",
-    "description": "Local-first AI chat app for Android — bring your own API keys, offline Vosk voice input, web search via Exa MCP, and a bundled CPython sandbox for running code. Kotlin/Compose with a C++ core.",
+    "description": "Local-first AI chat app for Android - bring your own API keys, offline Vosk voice input, web search via Exa MCP, and a bundled CPython sandbox for running code. Kotlin/Compose with a C++ core.",
     "repo": "https://github.com/TimeATronics/Zetla",
     "link": "/zetla"
   },
   {
     "title": "SeaSynth",
-    "description": "A wavetable synthesizer in Java — Swing UI with LWJGL audio.",
+    "description": "A wavetable synthesizer in Java - Swing UI with LWJGL audio.",
     "repo": "https://github.com/TimeATronics/SeaSynth"
   },
   {

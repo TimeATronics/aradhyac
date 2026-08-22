@@ -13,6 +13,6 @@ Mechanics that made it fun to build:
 
 - A special single-slot peg that unlocks when the solver detects a near-deadlock
 - Contiguous-group selection instead of one-disk moves, which opens up strategy
-- WebAudio synthesis for sound effects — no audio files shipped
+- WebAudio synthesis for sound effects - no audio files shipped
 
 It is fully client-side: one self-contained component, no assets, no server.

@@ -12,35 +12,35 @@ export const FEATURES = [
   {
     title: 'Any model. Your keys.',
     desc: 'Connect to OpenCode Zen, DeepSeek, or NVIDIA NIM. Pick your model, send your prompt, and you are off.',
-    detail: 'OpenAI API Support · Token Limiting Support · System Prompt Support',
+    detail: 'OpenAI API Support - Token Limiting Support - System Prompt Support',
     image: `/zetla/feature-chat.png${V}`,
     bg: '#f0eef8',
   },
   {
     title: 'Talk to it. It talks back.',
     desc: 'Offline voice recognition powered by Vosk. Chat hands-free while cooking, driving, or walking the dog.',
-    detail: 'Bundled Model · Multiple TTS Voices · Configurable Speed',
+    detail: 'Bundled Model - Multiple TTS Voices - Configurable Speed',
     image: `/zetla/feature-voice.gif${V}`,
     bg: '#f5f0e6',
   },
   {
     title: 'Grounded in reality.',
     desc: 'The LLM searches the web and reads full pages; great for planning trips, comparing products, or fact-checking on the fly.',
-    detail: 'Exa AI MCP · Search + URL Fetch · web_search Tool',
+    detail: 'Exa AI MCP - Search + URL Fetch - web_search Tool',
     image: `/zetla/feature-search.png${V}`,
     bg: '#e8f5ee',
   },
   {
     title: 'Feed it anything.',
     desc: 'Upload PDFs, Images, Word Docs, Excel Sheets, Presentations, or Text Files. Zetla reads them all - class notes, instruction PDFs, you name it.',
-    detail: 'PDF · DOCX · XLSX · PPTX · CSV · Images · Limit: 10 MB',
+    detail: 'PDF - DOCX - XLSX - PPTX - CSV - Images - Limit: 10 MB',
     image: `/zetla/feature-files.png${V}`,
     bg: '#f5eaea',
   },
   {
     title: 'Pick your palette.',
     desc: 'Five handcrafted color schemes: Default, Gruvbox, Solarized, Nord and Catppuccin. Make the app feel like yours.',
-    detail: '5 themes · Dark & Light Modes · Match Your Vibe',
+    detail: '5 themes - Dark & Light Modes - Match Your Vibe',
     image: `/zetla/theme-default.png${V}`,
     bg: THEMES[0].bg,
     carousel: true,
@@ -48,14 +48,14 @@ export const FEATURES = [
   {
     title: 'Hear it your way.',
     desc: "Multiple English voices from your device's TTS engine, with playback speed from slow to fast.",
-    detail: 'Android TTS · Voice Picker · 0.25x-2.0x Speed',
+    detail: 'Android TTS - Voice Picker - 0.25x-2.0x Speed',
     image: `/zetla/feature-tts.png${V}`,
     bg: '#f5eaee',
   },
   {
     title: 'Code runs here.',
     desc: 'A standalone Python 3.14 built with all stdlib modules. No cloud sandbox needed. Ask the LLM to run math, simulations, or data analysis right on your phone.',
-    detail: 'Sandboxed · Standalone · run_code Tool',
+    detail: 'Sandboxed - Standalone - run_code Tool',
     image: `/zetla/feature-python.png${V}`,
     bg: '#faf0e6',
   },
@@ -68,8 +68,8 @@ export const ALL_FEATURES = [
   { name: 'On-device Python', detail: 'CPython with standard library modules' },
   { name: 'Tool Calling', detail: 'Agent loop, up to 10 iterations' },
   { name: 'File Upload', detail: 'PDF, DOCX, XLSX, PPTX, CSV, images, text files' },
-  { name: 'Color Themes', detail: '5 schemes · dark & light' },
-  { name: 'TTS Voices', detail: 'Multi-voice · 0.25x-2.0x speed' },
+  { name: 'Color Themes', detail: '5 schemes - dark & light' },
+  { name: 'TTS Voices', detail: 'Multi-voice - 0.25x-2.0x speed' },
 ];
 
 export const FAQS = [

@@ -83,7 +83,7 @@ createServer(async (req, res) => {
   if (file === 'marked.min.js') {
     const candidates = ['node_modules/marked/marked.min.js', 'node_modules/marked/lib/marked.umd.js', 'node_modules/marked/marked.umd.js'];
     const src = candidates.find((c) => existsSync(join(HERE, '../..', c)));
-    if (!src) return json(res, 500, { ok: false, message: 'marked not found — run npm install in site/' });
+    if (!src) return json(res, 500, { ok: false, message: 'marked not found - run npm install in site/' });
     res.writeHead(200, { 'Content-Type': 'text/javascript' });
     return res.end(readFileSync(join(HERE, '../..', src)));
   }

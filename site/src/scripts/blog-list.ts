@@ -36,7 +36,7 @@ function render() {
     listEl.append(li);
   }
 
-  metaEl.textContent = `Showing ${start + 1}–${Math.min(start + PAGE_SIZE, posts.length)} of ${posts.length}`;
+  metaEl.textContent = `Showing ${start + 1}-${Math.min(start + PAGE_SIZE, posts.length)} of ${posts.length}`;
   pageInfoEl.textContent = `${page} / ${pages}`;
   if (prevBtn) prevBtn.disabled = page <= 1;
   if (nextBtn) nextBtn.disabled = page >= pages;

@@ -59,7 +59,7 @@ refreshBtn.addEventListener('click', async () => {
     const row = document.createElement('tr');
     const td = document.createElement('td');
     td.colSpan = 4;
-    td.textContent = `Refresh failed (${(e as Error).message}) — showing cached list.`;
+    td.textContent = `Refresh failed (${(e as Error).message}) - showing cached list.`;
     row.append(td);
     tbody.append(row);
   } finally {
