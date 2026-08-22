@@ -161,6 +161,21 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
     import '../scripts/publications.ts';
   </script>
   <script is:inline>
+    (() => {
+      const music = document.getElementById('music');
+      if (!music) return;
+      const apply = () => {
+        const dark = document.documentElement.dataset.theme === 'dark';
+        const bg = dark ? '0d0d0d' : 'ffffff';
+        music.querySelectorAll('iframe').forEach((f) => {
+          f.src = f.src.replace(/bgcol=[0-9a-f]{6}/, 'bgcol=' + bg);
+        });
+      };
+      apply();
+      new MutationObserver(apply).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    })();
+  </script>
+  <script is:inline>
     if (location.search.includes('edit')) {
       const skip = ['publications', 'contact'];
       document.querySelectorAll('main section').forEach((s) => {
