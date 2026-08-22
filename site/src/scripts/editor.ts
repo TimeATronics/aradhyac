@@ -163,15 +163,12 @@ function renderProjects() {
     status(`Added ${checked.length} repo(s). Edit details below, then Save.`, 'ok');
   };
 
-  fetch('https://api.github.com/users/TimeATronics/repos?sort=updated&per_page=100')
+  fetch('/api/edit/repos', { credentials: 'same-origin' })
     .then((r) => r.json())
-    .then((list) => {
+    .then((list: any) => {
+      if (!Array.isArray(list)) throw new Error(list?.message || 'Failed to load repos');
       if (!document.getElementById('repo-rows')) return;
-      repos = list.map((x: any) => ({
-        name: x.name,
-        html_url: x.html_url,
-        description: x.description,
-      }));
+      repos = list;
       renderRepoTable();
     })
     .catch((e) => {

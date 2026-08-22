@@ -11,10 +11,24 @@ import projects from '../data/projects.json';
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-const latest = posts.slice(0, 3);
+const blogData = posts.map((p) => ({
+  slug: p.slug,
+  title: p.data.title,
+  pubDate: p.data.pubDate.toISOString(),
+  description: p.data.description,
+}));
 
 const PAGE_SIZE = 5;
-const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
+const json = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
+const pager = (id: string, n: number) => `
+  <div class="projects-meta">
+    <span id="${id}-meta">Showing 1-${Math.min(PAGE_SIZE, n)} of ${n}</span>
+    <div class="projects-pager">
+      <button id="${id}-prev" type="button" class="page-btn" disabled>&#9664; Prev</button>
+      <span id="${id}-page">1 / ${Math.max(1, Math.ceil(n / PAGE_SIZE))}</span>
+      <button id="${id}-next" type="button" class="page-btn">Next &#9654;</button>
+    </div>
+  </div>`;
 ---
 
 <Base title="aradhyac">
@@ -29,17 +43,19 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
   <section id="blogs">
     <div class="section-head">
       <h2>Blogs</h2>
+      <a class="project-live" href="/blog">All posts</a>
     </div>
-    <ul class="post-list">
-      {latest.map((post) => (
+    <ul class="post-list" id="blogs-list">
+      {blogData.slice(0, PAGE_SIZE).map((p) => (
         <li>
-          <a class="post-title" href={`/blog/${post.slug}/`}>{post.data.title}</a>
-          <div class="post-date">{post.data.pubDate.toLocaleDateString()}</div>
-          {post.data.description && <p>{post.data.description}</p>}
+          <a class="post-title" href={`/blog/${p.slug}/`}>{p.title}</a>
+          <div class="post-date">{new Date(p.pubDate).toLocaleDateString()}</div>
+          {p.description && <p>{p.description}</p>}
         </li>
       ))}
     </ul>
-    {posts.length > 3 && <a href="/blog">All posts &rarr;</a>}
+    <div set:html={pager('blogs', blogData.length)}></div>
+    <script type="application/json" id="blogs-data" set:html={json(blogData)}></script>
   </section>
 
   <section id="projects">
@@ -66,15 +82,8 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
         </li>
       ))}
     </ul>
-    <div class="projects-meta">
-      <span id="projects-meta">Showing 1&ndash;{Math.min(PAGE_SIZE, projects.length)} of {projects.length}</span>
-      <div class="projects-pager">
-        <button id="projects-prev" type="button" class="page-btn" disabled>&#9664; Prev</button>
-        <span id="projects-page">1 / {Math.max(1, Math.ceil(projects.length / PAGE_SIZE))}</span>
-        <button id="projects-next" type="button" class="page-btn">Next &#9654;</button>
-      </div>
-    </div>
-    <script type="application/json" id="projects-data" set:html={projectsJson}></script>
+    <div set:html={pager('projects', projects.length)}></div>
+    <script type="application/json" id="projects-data" set:html={json(projects)}></script>
   </section>
 
   <section id="resources">
@@ -85,8 +94,8 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
       <thead>
         <tr><th>Subject</th><th>Course</th><th>Institution</th><th>Link</th></tr>
       </thead>
-      <tbody>
-        {resources.map((r) => (
+      <tbody id="resources-list">
+        {resources.slice(0, PAGE_SIZE).map((r) => (
           <tr>
             <td>{r.subject}</td>
             <td>{r.course_number}</td>
@@ -96,6 +105,8 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
         ))}
       </tbody>
     </table>
+    <div set:html={pager('resources', resources.length)}></div>
+    <script type="application/json" id="resources-data" set:html={json(resources)}></script>
   </section>
 
   <section id="publications">
@@ -107,8 +118,8 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
       <thead>
         <tr><th>Title</th><th>Venue</th><th>Year</th><th>Link</th></tr>
       </thead>
-      <tbody id="publications-body">
-        {publications.map((p) => (
+      <tbody id="publications-list">
+        {publications.slice(0, PAGE_SIZE).map((p) => (
           <tr>
             <td>{p.title}</td>
             <td>{p.venue}</td>
@@ -118,62 +129,61 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
         ))}
       </tbody>
     </table>
-    <script type="application/json" id="publications-data" set:html={JSON.stringify(publications).replace(/</g, '\\u003c')}></script>
+    <div set:html={pager('publications', publications.length)}></div>
+    <script type="application/json" id="publications-data" set:html={json(publications)}></script>
   </section>
 
   <section id="experience">
-    <h2>Experience</h2>
-    {experience.map((e) => (
-      <div class="experience-item">
-        <h3>{e.position} - <span class="experience-org">{e.organization}</span></h3>
-        <div class="post-date">{e.period}</div>
-        <ul>
-          {e.points.map((pt) => <li>{pt}</li>)}
-        </ul>
-      </div>
-    ))}
+    <div class="section-head">
+      <h2>Experience</h2>
+    </div>
+    <div id="experience-list">
+      {experience.slice(0, PAGE_SIZE).map((e) => (
+        <div class="experience-item">
+          <h3>{e.position} - <span class="experience-org">{e.organization}</span></h3>
+          <div class="post-date">{e.period}</div>
+          <ul>
+            {e.points.map((pt) => <li>{pt}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div set:html={pager('experience', experience.length)}></div>
+    <script type="application/json" id="experience-data" set:html={json(experience)}></script>
   </section>
 
   {music.length > 0 && (
     <section id="music">
-      <h2>Music</h2>
-      {music.map((m) => (
-        <div class="music-item">
-          <iframe
-            style="border: 0; width: 100%; height: 42px;"
-            src={m.url}
-            seamless
-            loading="lazy"
-            title={m.title}
-          ></iframe>
-        </div>
-      ))}
+      <div class="section-head">
+        <h2>Music</h2>
+      </div>
+      <div id="music-list">
+        {music.slice(0, PAGE_SIZE).map((m) => (
+          <div class="music-item">
+            <iframe
+              style="border: 0; width: 100%; height: 42px;"
+              src={m.url}
+              seamless
+              loading="lazy"
+              title={m.title}
+            ></iframe>
+          </div>
+        ))}
+      </div>
+      <div set:html={pager('music', music.length)}></div>
+      <script type="application/json" id="music-data" set:html={json(music)}></script>
     </section>
   )}
 
   <section id="contact">
-    <h2>Contact</h2>
+    <div class="section-head">
+      <h2>Contact</h2>
+    </div>
     <p>Reach me at <a href="mailto:aradhya.chakrabarti@gmail.com">aradhya.chakrabarti@gmail.com</a></p>
   </section>
 
   <script>
-    import '../scripts/projects.ts';
-    import '../scripts/publications.ts';
-  </script>
-  <script is:inline>
-    (() => {
-      const music = document.getElementById('music');
-      if (!music) return;
-      const apply = () => {
-        const dark = document.documentElement.dataset.theme === 'dark';
-        const bg = dark ? '0d0d0d' : 'ffffff';
-        music.querySelectorAll('iframe').forEach((f) => {
-          f.src = f.src.replace(/bgcol=[0-9a-f]{6}/, 'bgcol=' + bg);
-        });
-      };
-      apply();
-      new MutationObserver(apply).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    })();
+    import '../scripts/index-pagers.ts';
   </script>
   <script is:inline>
     if (location.search.includes('edit')) {

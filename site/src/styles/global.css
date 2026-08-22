@@ -214,6 +214,13 @@ td a { word-break: break-all; }
 .post-back-row h1 { margin: 0; }
 .post-back-row .page-btn { text-decoration: none; white-space: nowrap; }
 
+/* tables scroll horizontally instead of wrapping on narrow screens */
+table { display: block; overflow-x: auto; max-width: 100%; }
+table thead, table tbody { display: table; width: max-content; min-width: 100%; }
+table tr { display: table-row; }
+table th, table td { display: table-cell; white-space: nowrap; }
+
 @media (max-width: 480px) {
-  .site-header nav a { display: none; }
+  .site-header nav { gap: 0.6rem; }
+  .site-header nav a { font-size: 0.9rem; }
 }

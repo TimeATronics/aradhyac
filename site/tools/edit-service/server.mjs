@@ -261,6 +261,17 @@ createServer(async (req, res) => {
       return json(res, 200, { ok: true, message: `Saved ${name}. Changes go live after the site rebuilds (~2 min).` });
     }
 
+    if (path === '/api/edit/repos' && req.method === 'GET') {
+      const token = await sessionToken(s);
+      const res2 = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res2.ok) throw new Error(`GitHub API ${res2.status}`);
+      const repos = await res2.json();
+      if (!Array.isArray(repos)) throw new Error('GitHub returned an unexpected response');
+      return json(res, 200, repos.map((r) => ({ name: r.name, html_url: r.html_url, description: r.description })));
+    }
+
     if (path === '/api/edit/blog' && req.method === 'GET') {
       const res2 = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/site/src/content/blog`, {
         headers: { Authorization: `Bearer ${await sessionToken(s)}` },
