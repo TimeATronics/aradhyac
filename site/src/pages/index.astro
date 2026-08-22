@@ -125,7 +125,7 @@ const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
     <h2>Experience</h2>
     {experience.map((e) => (
       <div class="experience-item">
-        <h3>{e.position} &mdash; <span class="experience-org">{e.organization}</span></h3>
+        <h3>{e.position} - <span class="experience-org">{e.organization}</span></h3>
         <div class="post-date">{e.period}</div>
         <ul>
           {e.points.map((pt) => <li>{pt}</li>)}
