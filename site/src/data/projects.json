@@ -1,9 +1,9 @@
 [
   {
-    "title": "Tower Game",
-    "description": "A color-sorting puzzle built with three.js - play it right here.",
-    "repo": "",
-    "link": "/tower"
+    "title": "TrimUI Brick Music Player",
+    "description": "An efficient music player for the TrimUI Brick - My latest project, written in Golang, using SDL2. It is supposed to look like a Zune (but it has its differences still) and supports large song libraries, with search support (on-screen keyboard) and playlists as well! There is also support for using Bluetooth audio output (it can be a little finicky sometimes but otherwise it works pretty well!)\n\nCheck it out if you are looking for a nice, easy-on-the-battery-life Music Player for the TrimUI Brick (binaries available on the Releases page)",
+    "repo": "https://github.com/TimeATronics/music_player",
+    "link": ""
   },
   {
     "title": "Zetla",
@@ -12,20 +12,20 @@
     "link": "/zetla"
   },
   {
-    "title": "wasm_cpu",
-    "description": "A simple 32-bit stack processor implemented for the Tang Nano 9K FPGA.",
+    "title": "WASM-inspired CPU with Toolchain",
+    "description": "A simple 32-bit stack processor implemented for the Tang Nano 9K FPGA. I have, since the initial implementation, also worked on developing a C89 toolchain (passes 76% of https://c-testsuite.github.io/) and an assembler + linker for the same, with ELF binary support.\n\nIt is in no way complete yet, and I do not intend to work on it for a while, but it was a fun learning experience no less.",
     "repo": "https://github.com/TimeATronics/wasm_cpu",
     "link": ""
   },
   {
-    "title": "music_player",
-    "description": "An efficient music player for the TrimUI Brick.",
-    "repo": "https://github.com/TimeATronics/music_player",
-    "link": ""
+    "title": "Tower Game",
+    "description": "A color-sorting puzzle built with three.js - play it right here.",
+    "repo": "",
+    "link": "/tower"
   },
   {
-    "title": "autotypeset",
-    "description": "Postgrad Notes to LaTeX",
+    "title": "AutoTypeset",
+    "description": "I spent my last 2 semesters of B.Tech interning, and so never had the chance to write handwritten notes for the subjects then. So I mostly generated LaTeX notes with the reference textbooks... Fast-forward to now, AutoTypeset takes my handwritten PDF notes as input, and outputs LaTeX PDFs. And it works great!",
     "repo": "https://github.com/TimeATronics/autotypeset",
     "link": ""
   }
