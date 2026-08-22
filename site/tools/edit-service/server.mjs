@@ -166,25 +166,6 @@ function validate(name, data) {
   }
   throw new Error(`unknown data file: ${name}`);
 }
-const orcidWorks = async () => {
-  const res = await fetch('https://pub.orcid.org/v3.0/0009-0003-3450-5728/works', {
-    headers: { Accept: 'application/json' },
-  });
-  if (!res.ok) throw new Error(`ORCID API ${res.status}`);
-  const data = await res.json();
-  return (data.group ?? []).map((g) => {
-    const w = g['work-summary'][0];
-    const ext = (w['external-ids']?.['external-id'] ?? [])[0] ?? {};
-    return {
-      title: w.title?.title?.value ?? '',
-      type: w.type ?? '',
-      year: w['publication-date']?.year?.value ?? '',
-      venue: w['journal-title']?.value ?? '',
-      doi: ext['external-id-type'] === 'doi' ? ext['external-id-value'] : null,
-      url: w.url?.value ?? null,
-    };
-  });
-};
 
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);

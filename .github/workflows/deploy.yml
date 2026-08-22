@@ -43,7 +43,8 @@ jobs:
           rsync -az deploy/ "$USER@$HOST:/opt/aradhyac/"
           rsync -az site/tools/edit-service/ "$USER@$HOST:/opt/aradhyac/editor/"
           ssh "$USER@$HOST" "
+            set -e
             ln -sfn /srv/aradhyac/releases/${GITHUB_SHA} /srv/aradhyac/current
             ls -td /srv/aradhyac/releases/*/ | tail -n +4 | xargs -r rm -rf
-            cd /opt/aradhyac && docker compose up -d
+            cd /opt/aradhyac && docker compose up -d --force-recreate
           "
