@@ -392,11 +392,23 @@ async function renderBlogs() {
   else renderBlogForm({});
 }
 
+let openSeq = 0;
+
 async function openPost(name: string) {
+  const seq = ++openSeq;
   try {
-    currentPost = await api('/blog/' + encodeURIComponent(name), { method: 'GET' });
-    renderBlogForm(currentPost);
-  } catch (e: any) { status(e.message, 'err'); }
+    const p = await api('/blog/' + encodeURIComponent(name), { method: 'GET' });
+    if (seq !== openSeq) return;
+    currentPost = p;
+    try {
+      renderBlogForm(p);
+    } catch {
+      currentPost = null;
+      status('Could not render this post.', 'err');
+    }
+  } catch (e: any) {
+    if (seq === openSeq) status(e.message, 'err');
+  }
 }
 
 function parseFront(content: string) {
