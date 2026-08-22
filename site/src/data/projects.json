@@ -2,6 +2,7 @@
   {
     "title": "Tower Game",
     "description": "A color-sorting puzzle built with three.js - play it right here.",
+    "repo": "",
     "link": "/tower"
   },
   {
@@ -11,23 +12,15 @@
     "link": "/zetla"
   },
   {
-    "title": "SeaSynth",
-    "description": "A wavetable synthesizer in Java - Swing UI with LWJGL audio.",
-    "repo": "https://github.com/TimeATronics/SeaSynth"
-  },
-  {
     "title": "wasm_cpu",
     "description": "A simple 32-bit stack processor implemented for the Tang Nano 9K FPGA.",
-    "repo": "https://github.com/TimeATronics/wasm_cpu"
-  },
-  {
-    "title": "gochess",
-    "description": "A chess engine in Go with a web frontend.",
-    "repo": "https://github.com/TimeATronics/gochess"
+    "repo": "https://github.com/TimeATronics/wasm_cpu",
+    "link": ""
   },
   {
     "title": "music_player",
     "description": "An efficient music player for the TrimUI Brick.",
-    "repo": "https://github.com/TimeATronics/music_player"
+    "repo": "https://github.com/TimeATronics/music_player",
+    "link": ""
   }
 ]
