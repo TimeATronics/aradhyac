@@ -14,4 +14,4 @@ dist/
 .agents
 refs/
 DESIGN.md
-**/*.env
+**/*.env.ssh-keys/
