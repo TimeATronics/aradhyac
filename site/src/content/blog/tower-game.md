@@ -5,14 +5,10 @@ description: "Eight towers, eight colors, two auxiliary pegs, and one stubborn s
 tags: ["games", "webgl"]
 ---
 
-The [tower game](/tower) is a color-sorting puzzle rendered in three.js. Eight colors
-of four disks each are shuffled across the towers; move contiguous same-colored groups
-onto empty pegs or matching stacks until every tower holds a single color.
+The tower game on this site started as a way to learn three.js and turned into something I kept coming back to. It is a color-sorting puzzle. Eight colors of four disks each start shuffled across the towers, and you move stacks around until every tower holds a single color.
 
-Mechanics that made it fun to build:
+Two details make it harder than it looks. You move contiguous groups of the same color, not single disks, which changes what a "safe" move is. And there is a special single-slot peg that unlocks only when the game detects you are close to a deadlock. It is the game quietly telling you to stop shuffling and think.
 
-- A special single-slot peg that unlocks when the solver detects a near-deadlock
-- Contiguous-group selection instead of one-disk moves, which opens up strategy
-- WebAudio synthesis for sound effects - no audio files shipped
+There are no audio files. Sound effects come from WebAudio oscillators, so the whole thing ships as one component with no assets and no server.
 
-It is fully client-side: one self-contained component, no assets, no server.
+I played it a lot while building it. I still lose more often than I win.
