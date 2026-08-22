@@ -1,0 +1,181 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import profile from '../data/profile.json';
+import resources from '../data/resources.json';
+import publications from '../data/publications.cache.json';
+import experience from '../data/experience.json';
+import music from '../data/music.json';
+import projects from '../data/projects.json';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const latest = posts.slice(0, 3);
+
+const PAGE_SIZE = 5;
+const projectsJson = JSON.stringify(projects).replace(/</g, '\\u003c');
+---
+
+<Base title="aradhyac">
+  <section id="about">
+    <h1>{profile.name}</h1>
+    {profile.about.map((p) => <p>{p}</p>)}
+    <div class="about-links">
+      {Object.entries(profile.links).map(([label, url]) => <a href={url}>{label}</a>)}
+    </div>
+  </section>
+
+  <section id="blogs">
+    <div class="section-head">
+      <h2>Blogs</h2>
+    </div>
+    <ul class="post-list">
+      {latest.map((post) => (
+        <li>
+          <a class="post-title" href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          <div class="post-date">{post.data.pubDate.toLocaleDateString()}</div>
+          {post.data.description && <p>{post.data.description}</p>}
+        </li>
+      ))}
+    </ul>
+    {posts.length > 3 && <a href="/blog">All posts &rarr;</a>}
+  </section>
+
+  <section id="projects">
+    <div class="section-head">
+      <h2>Projects</h2>
+    </div>
+    <ul class="project-list" id="projects-list">
+      {projects.slice(0, PAGE_SIZE).map((p) => (
+        <li>
+          <div>
+            {p.repo
+              ? <a class="post-title" href={p.repo} target="_blank" rel="noopener noreferrer">{p.title}</a>
+              : <span class="post-title">{p.title}</span>}
+            {p.link && (
+              <a
+                class="project-live"
+                href={p.link}
+                target={p.link.startsWith('http') ? '_blank' : undefined}
+                rel={p.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >Live</a>
+            )}
+          </div>
+          {p.description && <p class="project-desc">{p.description}</p>}
+        </li>
+      ))}
+    </ul>
+    <div class="projects-meta">
+      <span id="projects-meta">Showing 1&ndash;{Math.min(PAGE_SIZE, projects.length)} of {projects.length}</span>
+      <div class="projects-pager">
+        <button id="projects-prev" type="button" class="page-btn" disabled>&#9664; Prev</button>
+        <span id="projects-page">1 / {Math.max(1, Math.ceil(projects.length / PAGE_SIZE))}</span>
+        <button id="projects-next" type="button" class="page-btn">Next &#9654;</button>
+      </div>
+    </div>
+    <script type="application/json" id="projects-data" set:html={projectsJson}></script>
+  </section>
+
+  <section id="resources">
+    <div class="section-head">
+      <h2>Resources</h2>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Subject</th><th>Course</th><th>Institution</th><th>Link</th></tr>
+      </thead>
+      <tbody>
+        {resources.map((r) => (
+          <tr>
+            <td>{r.subject}</td>
+            <td>{r.course_number}</td>
+            <td>{r.institution}</td>
+            <td><a href={r.url}>notes</a></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+
+  <section id="publications">
+    <div class="section-head">
+      <h2>Publications</h2>
+      <button id="pub-refresh" type="button" class="icon-btn" title="Refresh from ORCID" aria-label="Refresh from ORCID">&#10227;</button>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Venue</th><th>Year</th><th>Link</th></tr>
+      </thead>
+      <tbody id="publications-body">
+        {publications.map((p) => (
+          <tr>
+            <td>{p.title}</td>
+            <td>{p.venue}</td>
+            <td>{p.year}</td>
+            <td><a href={p.url ?? `https://doi.org/${p.doi}`}>doi</a></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <script type="application/json" id="publications-data" set:html={JSON.stringify(publications).replace(/</g, '\\u003c')}></script>
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+    {experience.map((e) => (
+      <div class="experience-item">
+        <h3>{e.position} &mdash; <span class="experience-org">{e.organization}</span></h3>
+        <div class="post-date">{e.period}</div>
+        <ul>
+          {e.points.map((pt) => <li>{pt}</li>)}
+        </ul>
+      </div>
+    ))}
+  </section>
+
+  {music.length > 0 && (
+    <section id="music">
+      <h2>Music</h2>
+      {music.map((m) => (
+        <div class="music-item">
+          <iframe
+            style="border: 0; width: 100%; height: 42px;"
+            src={m.url}
+            seamless
+            loading="lazy"
+            title={m.title}
+          ></iframe>
+        </div>
+      ))}
+    </section>
+  )}
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Reach me at <a href="mailto:aradhya.chakrabarti@gmail.com">aradhya.chakrabarti@gmail.com</a></p>
+  </section>
+
+  <script>
+    import '../scripts/projects.ts';
+    import '../scripts/publications.ts';
+  </script>
+  <script is:inline>
+    if (location.search.includes('edit')) {
+      document.querySelectorAll('main section').forEach((s) => {
+        const btn = document.createElement('a');
+        btn.className = 'edit-icon';
+        btn.href = '/edit#' + s.id;
+        btn.title = 'Edit ' + s.id;
+        btn.textContent = '\u270E';
+        const head = s.querySelector('.section-head') ?? s.querySelector('h1');
+        (head ?? s).append(btn);
+      });
+      const exit = document.createElement('a');
+      exit.className = 'edit-exit';
+      exit.href = '/';
+      exit.textContent = 'Exit edit mode';
+      document.querySelector('nav')?.append(exit);
+    }
+  </script>
+</Base>

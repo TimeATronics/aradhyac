@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const PAGE_SIZE = 5;
+const postsJson = JSON.stringify(
+  posts.map((p) => ({
+    slug: p.slug,
+    title: p.data.title,
+    pubDate: p.data.pubDate.toISOString(),
+    description: p.data.description,
+  })),
+).replace(/</g, '\\u003c');
+---
+
+<Base title="Blog — Aradhya Chakrabarti">
+  <div class="section-head">
+    <h2>Blog</h2>
+  </div>
+  <ul class="post-list" id="blog-list">
+    {posts.slice(0, PAGE_SIZE).map((post) => (
+      <li>
+        <a class="post-title" href={`/blog/${post.slug}/`}>{post.data.title}</a>
+        <div class="post-date">{post.data.pubDate.toLocaleDateString()}</div>
+        {post.data.description && <p>{post.data.description}</p>}
+      </li>
+    ))}
+  </ul>
+  <div class="projects-meta">
+    <span id="blog-meta">Showing 1&ndash;{Math.min(PAGE_SIZE, posts.length)} of {posts.length}</span>
+    <div class="projects-pager">
+      <button id="blog-prev" type="button" class="page-btn" disabled>&#9664; Prev</button>
+      <span id="blog-page">1 / {Math.max(1, Math.ceil(posts.length / PAGE_SIZE))}</span>
+      <button id="blog-next" type="button" class="page-btn">Next &#9654;</button>
+    </div>
+  </div>
+  <script type="application/json" id="blog-data" set:html={postsJson}></script>
+  <script>
+    import '../../scripts/blog-list.ts';
+  </script>
+</Base>

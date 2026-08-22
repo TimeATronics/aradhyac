@@ -1,0 +1,49 @@
+name: build-and-deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install
+        run: npm ci
+        working-directory: site
+      - name: Fetch publications cache
+        run: node scripts/fetch-publications.mjs
+        working-directory: site
+      - name: Build
+        run: npm run build
+        working-directory: site
+      - name: Deploy
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          rsync -az --delete site/dist/ "$USER@$HOST:/srv/aradhyac/releases/${GITHUB_SHA}/"
+          rsync -az deploy/ "$USER@$HOST:/opt/aradhyac/"
+          rsync -az site/tools/edit-service/ "$USER@$HOST:/opt/aradhyac/editor/"
+          ssh "$USER@$HOST" "
+            ln -sfn /srv/aradhyac/releases/${GITHUB_SHA} /srv/aradhyac/current
+            ls -td /srv/aradhyac/releases/*/ | tail -n +4 | xargs -r rm -rf
+            cd /opt/aradhyac && docker compose up -d
+          "

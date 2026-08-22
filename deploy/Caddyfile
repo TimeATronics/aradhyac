@@ -1,0 +1,17 @@
+aradhyac.com {
+  handle /api/edit/* {
+    reverse_proxy editor:8080
+  }
+
+  handle {
+    root * /srv/aradhyac/current
+    try_files {path} {path}/index.html
+    encode zstd gzip
+    header /_astro/* Cache-Control "public, max-age=31536000, immutable"
+    file_server
+  }
+}
+
+www.aradhyac.com {
+  redir https://aradhyac.com{uri} permanent
+}

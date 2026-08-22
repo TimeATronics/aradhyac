@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>edit · aradhyac</title>
+<link rel="icon" href="https://aradhyac.com/favicon.svg" />
+<link rel="stylesheet" href="/edit/editor.css" />
+</head>
+<body>
+<div id="login" class="login hidden">
+  <h1>Edit aradhyac.com</h1>
+  <button id="gh-login" class="primary hidden">Sign in with GitHub</button>
+  <p id="login-err" style="color:#c62828"></p>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <h1>edit · aradhyac</h1>
+    <nav>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#profile">Bio</a>
+      <a href="#resources">Resources</a>
+      <a href="#publications">Publications</a>
+      <a href="#music">Music</a>
+    </nav>
+    <span id="user-name" class="muted"></span>
+    <button id="logout">Log out</button>
+  </header>
+  <main>
+    <div class="toolbar">
+      <h2 id="section-title" style="margin:0"></h2>
+      <span id="status"></span>
+    </div>
+    <div id="content"></div>
+    <div class="toolbar" id="save-bar">
+      <button id="save" class="primary">Save</button>
+      <a href="/" style="font-size:0.9rem">View site &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="/edit/editor.js"></script>
+</body>
+</html>

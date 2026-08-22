@@ -4,9 +4,14 @@ node_modules/
 instance/
 dist/
 .vite/
+.astro/
 .env.local
 .env.*.local
 .vscode/
 *.log
 */__pycache__/
 *.pyc
+.agents
+refs/
+DESIGN.md
+**/*.env

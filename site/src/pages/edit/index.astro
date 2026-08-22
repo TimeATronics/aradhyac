@@ -1,0 +1,56 @@
+---
+import '../../styles/editor.css';
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>edit · aradhyac</title>
+    <link rel="icon" href="/favicon.svg" />
+    <script is:inline>
+      const t = localStorage.getItem('theme');
+      if (t) document.documentElement.dataset.theme = t;
+    </script>
+  </head>
+  <body>
+    <div id="login" class="login">
+      <h1>Edit aradhyac.com</h1>
+      <button id="gh-login" class="primary hidden">Sign in with GitHub</button>
+      <p id="login-err" class="err"></p>
+    </div>
+
+    <div id="app" class="hidden">
+      <header>
+        <h1>edit · aradhyac</h1>
+        <nav>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#profile">Bio</a>
+          <a href="#resources">Resources</a>
+          <a href="#music">Music</a>
+          <a href="#blogs">Blogs</a>
+        </nav>
+        <span id="user-name" class="muted"></span>
+        <button id="theme-toggle" title="Toggle theme">&#9681;</button>
+        <button id="logout">Log out</button>
+      </header>
+      <main>
+        <div class="toolbar">
+          <h2 id="section-title"></h2>
+          <span id="status"></span>
+        </div>
+        <div id="content"></div>
+        <div class="toolbar" id="save-bar">
+          <button id="save" class="primary">Save</button>
+          <button id="view-site">View site</button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      import '../../scripts/editor.ts';
+    </script>
+  </body>
+</html>

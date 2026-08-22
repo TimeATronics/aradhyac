@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article class="prose">
+    <div class="post-back-row">
+      <a class="page-btn" href="/blog" onclick="if (history.length > 1) { event.preventDefault(); history.back(); }">&#9664; Back</a>
+      <h1>{post.data.title}</h1>
+    </div>
+    <div class="post-meta">{post.data.pubDate.toLocaleDateString()}</div>
+    <Content />
+  </article>
+</Base>

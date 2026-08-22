@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>blogwriter</title>
+<style>
+:root { --bg:#fff; --fg:#111; --muted:#555; --border:#ddd; --accent:#1a5cd6; --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; --mono:ui-monospace,Menlo,monospace; }
+[data-theme="dark"] { --bg:#0d0d0d; --fg:#f2f2f2; --muted:#9a9a9a; --border:#2a2a2a; --accent:#7aa2ff; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font-family:var(--font); line-height:1.6; }
+a { color:var(--accent); }
+.top { display:flex; gap:1rem; align-items:center; padding:0.8rem 1rem; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:10; }
+.top h1 { font-size:1.1rem; margin:0 auto 0 0; }
+select, input, button { font:inherit; background:var(--bg); color:var(--fg); border:1px solid var(--border); border-radius:6px; padding:0.3rem 0.6rem; }
+button { cursor:pointer; }
+button.primary { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+main { display:grid; grid-template-columns:1fr 1fr; gap:1rem; padding:1rem; }
+@media (max-width:900px) { main { grid-template-columns:1fr; } }
+label { display:block; font-size:0.8rem; color:var(--muted); margin:0.6rem 0 0.2rem; }
+input[type=text], input[type=date] { width:100%; }
+textarea { width:100%; min-height:55vh; font-family:var(--mono); font-size:0.9rem; background:var(--bg); color:var(--fg); border:1px solid var(--border); border-radius:6px; padding:0.6rem; }
+#preview { border:1px solid var(--border); border-radius:6px; padding:0.6rem 1rem; overflow:auto; min-height:55vh; }
+#preview img { max-width:100%; }
+#preview code { font-family:var(--mono); background:var(--border); padding:0.1em 0.35em; border-radius:4px; }
+#preview pre { background:var(--border); padding:0.8rem; border-radius:6px; }
+#status { color:var(--muted); font-size:0.9rem; }
+.actions { display:flex; gap:0.6rem; align-items:center; margin-top:0.8rem; }
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>blogwriter</h1>
+  <label style="margin:0">Post <select id="post-select"></select></label>
+  <button id="new">New</button>
+  <button id="save">Save draft</button>
+  <button id="publish" class="primary">Publish to website</button>
+  <button id="theme" title="toggle theme">&#9681;</button>
+  <span id="status"></span>
+</div>
+<main>
+  <div>
+    <label>Title</label>
+    <input type="text" id="title" placeholder="Post title" />
+    <label>Date</label>
+    <input type="date" id="pubDate" />
+    <label>Description (shown on listing)</label>
+    <input type="text" id="description" />
+    <label>Tags (comma separated)</label>
+    <input type="text" id="tags" />
+    <label>Markdown body</label>
+    <textarea id="body" placeholder="Write your post in Markdown..."></textarea>
+  </div>
+  <div>
+    <label>Preview</label>
+    <div id="preview"></div>
+  </div>
+</main>
+<script src="/marked.min.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+let current = null;
+const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; };
+
+function renderPreview() {
+  const d = $('preview'); d.innerHTML = '';
+  d.append(el('h1', null, $('title').value || 'Untitled'));
+  if ($('pubDate').value) d.append(el('div', 'meta', $('pubDate').value));
+  const div = el('div'); div.innerHTML = marked.parse($('body').value || '');
+  d.append(div);
+}
+
+async function loadPosts() {
+  const posts = await (await fetch('/api/posts')).json();
+  $('post-select').innerHTML = '';
+  for (const p of posts) $('post-select').append(new Option(p.title, p.slug));
+  if (posts.length) await openPost(posts[0].slug);
+  else newPost();
+}
+
+async function openPost(slug) {
+  const { body } = await (await fetch('/api/post?slug=' + encodeURIComponent(slug))).json();
+  const fm = body.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/) || [];
+  const meta = {};
+  if (fm[1]) for (const line of fm[1].split('\n')) {
+    const m = line.match(/^(\w+):\s*(.+)$/);
+    if (m) meta[m[1]] = m[2].replace(/^"(.*)"$/, '$1');
+  }
+  current = { slug };
+  $('title').value = meta.title || ''; $('pubDate').value = meta.pubDate || '';
+  $('description').value = meta.description || '';
+  $('tags').value = (meta.tags || '').replace(/^\[|\]$/g, '').replace(/"/g, '');
+  $('body').value = (fm[2] || '').trim();
+  renderPreview();
+}
+
+function newPost() {
+  current = null;
+  $('title').value = ''; $('pubDate').value = new Date().toISOString().slice(0, 10);
+  $('description').value = ''; $('tags').value = ''; $('body').value = '';
+  renderPreview();
+}
+
+const payload = () => {
+  const slug = current?.slug ?? $('title').value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'post';
+  return {
+    slug,
+    title: $('title').value,
+    pubDate: $('pubDate').value || new Date().toISOString().slice(0, 10),
+    description: $('description').value,
+    tags: $('tags').value.split(',').map((t) => t.trim()).filter(Boolean),
+    body: $('body').value,
+  };
+};
+
+const status = (msg) => { $('status').textContent = msg; setTimeout(() => ($('status').textContent = ''), 6000); };
+
+$('save').onclick = async () => {
+  const p = payload();
+  const r = await (await fetch('/api/post', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) })).json();
+  status('Saved as ' + r.slug + '.md');
+  await loadPosts(); $('post-select').value = r.slug;
+};
+
+$('publish').onclick = async () => {
+  const p = payload();
+  await fetch('/api/post', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
+  const r = await (await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) })).json();
+  status(r.message);
+};
+
+$('new').onclick = newPost;
+$('post-select').onchange = () => openPost($('post-select').value);
+$('theme').onclick = () => {
+  document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+};
+for (const id of ['title', 'pubDate', 'description', 'tags', 'body']) $(id).addEventListener('input', renderPreview);
+
+loadPosts();
+</script>
+</body>
+</html>

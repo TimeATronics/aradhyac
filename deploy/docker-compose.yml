@@ -1,0 +1,29 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /srv/aradhyac:/srv/aradhyac:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - editor
+
+  editor:
+    image: node:22-alpine
+    restart: unless-stopped
+    working_dir: /app
+    command: ["node", "server.mjs"]
+    env_file: ./editor.env
+    volumes:
+      - ./editor:/app:ro
+    expose:
+      - "8080"
+
+volumes:
+  caddy_data:
+  caddy_config:
