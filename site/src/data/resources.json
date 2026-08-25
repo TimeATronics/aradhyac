@@ -1,5 +1,12 @@
 [
   {
+    "subject": "Algorithms Practice",
+    "course_number": "CSE511",
+    "institution": "IIIT Bangalore",
+    "url": "/algorithms",
+    "label": "open"
+  },
+  {
     "subject": "Time Series Forecasting",
     "course_number": "CS30014",
     "institution": "KIIT Bhubaneswar",

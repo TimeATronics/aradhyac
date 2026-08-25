@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import problems from '../data/AllProblems.json';
+
+const steps = problems.map((t) => ({
+  no: t.stepNo,
+  title: t.topic,
+  sub: t.subTopic || '',
+}));
+const label = (s: { title: string; sub: string }) => (s.sub ? `${s.title} [${s.sub}]` : s.title);
+let num = 0;
+const allRows = problems.flatMap((t) =>
+  t.problems.map((p) => ({ ...p, stepNo: t.stepNo, topic: t.topic, num: ++num })),
+);
+---
+
+<Base title="Algorithms Practice" description="Striver's A2Z DSA sheet tracker" wide>
+  <div class="algo-header">
+    <div class="post-back-row">
+      <a class="page-btn" href="/">&#9664; Back</a>
+      <h1>Algorithms Practice</h1>
+    </div>
+    <div class="session-controls">
+      <span class="muted">Session:</span>
+      <select id="algo-session"></select>
+      <input id="algo-name" type="text" placeholder="session name" maxlength="6" autocomplete="off" hidden />
+      <button id="algo-new" type="button">New</button>
+      <button id="algo-del" type="button" disabled>Delete</button>
+    </div>
+  </div>
+
+  <div class="algo-panel">
+    <details class="target-wrap">
+      <summary id="algo-target-summary">Targets: none</summary>
+      <div class="target-list">
+        {steps.map((s) => (
+          <label><input type="checkbox" class="target-check" value={s.no} /> {s.no}. {label(s)}</label>
+        ))}
+        <button id="algo-target-clear" type="button">clear all</button>
+      </div>
+    </details>
+    <div class="diff-filters">
+      {['Easy', 'Medium', 'Hard'].map((d) => (
+        <label><input type="checkbox" class="diff-check" data-diff={d} checked /> {d}</label>
+      ))}
+    </div>
+    <span class="muted" id="algo-visible"></span>
+    <span class="muted" id="algo-starred"></span>
+  </div>
+
+  <div class="metric-block">
+    <div class="metric-line">
+      <span class="metric-name">Global progress</span>
+      <span class="metric-pct" id="algo-g-pct">0%</span>
+    </div>
+    <div class="bar" id="algo-g-bar"></div>
+    <div class="metric-counts" id="algo-g-counts"></div>
+  </div>
+
+  <div class="metric-block" id="algo-t-block" hidden>
+    <div class="metric-line">
+      <span class="metric-name">Target progress</span>
+      <span class="metric-pct" id="algo-t-pct">0%</span>
+    </div>
+    <div class="bar" id="algo-t-bar"></div>
+    <div class="metric-counts" id="algo-t-counts"></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="algo-table" id="algo-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>&#9733;</th>
+          <th>
+            Problem Title
+            <input id="algo-search" type="search" placeholder="type to search..." autocomplete="off" />
+          </th>
+          <th>
+            Topic
+            <select id="algo-topic">
+              <option value="">All topics</option>
+              {steps.map((s) => (
+                <option value={s.no}>{label(s)}</option>
+              ))}
+            </select>
+          </th>
+          <th>
+            <div class="th-inline">Difficulty <button id="algo-diff-sort" type="button" title="sort by difficulty">&#8597;</button></div>
+          </th>
+          <th>LeetCode</th>
+          <th>GeeksforGeeks</th>
+          <th>YouTube</th>
+        </tr>
+      </thead>
+      <tbody id="algo-body">
+        {allRows.map((p) => (
+          <tr data-id={p.id} data-diff={p.difficulty ?? ''} data-step={p.stepNo}>
+            <td class="num-cell">
+              <label>
+                <input type="checkbox" class="done" />
+                <span>{p.num}</span>
+              </label>
+            </td>
+            <td class="star-cell"><button type="button" class="star" aria-label="star">&#9734;</button></td>
+            <td class="title-cell">{p.title}</td>
+            <td class="topic-cell" title={p.sub ? `${p.topic} [${p.sub}]` : p.topic}>
+              {p.topic}{p.sub && <div class="topic-sub">{p.sub}</div>}
+            </td>
+            <td>
+              {p.difficulty ? (
+                <span class={`diff diff-${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+              ) : (
+                <span class="diff diff-unknown">-</span>
+              )}
+            </td>
+            <td class="link-cell">{p.lcLink ? <a href={p.lcLink} target="_blank" rel="noopener">LC</a> : '-'}</td>
+            <td class="link-cell">{p.gfgLink ? <a href={p.gfgLink} target="_blank" rel="noopener">GFG</a> : '-'}</td>
+            <td class="link-cell">{p.ytLink ? <a href={p.ytLink} target="_blank" rel="noopener">YT</a> : '-'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</Base>
+
+<script>
+  import { init } from '../scripts/algorithms.ts';
+  init();
+</script>

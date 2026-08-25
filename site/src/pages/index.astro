@@ -42,7 +42,7 @@ const pager = (id: string, n: number) => `
 
   <section id="blogs">
     <div class="section-head">
-      <h2>Blogs</h2>
+      <h2>Blog</h2>
       <a class="project-live" href="/blog">All posts</a>
     </div>
     <ul class="post-list" id="blogs-list">
@@ -101,7 +101,7 @@ const pager = (id: string, n: number) => `
               <td>{r.subject}</td>
               <td>{r.course_number}</td>
               <td>{r.institution}</td>
-              <td><a href={r.url}>notes</a></td>
+              <td><a href={r.url}>{r.label ?? 'notes'}</a></td>
             </tr>
           ))}
         </tbody>
