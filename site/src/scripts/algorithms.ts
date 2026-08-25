@@ -468,8 +468,13 @@ export function init() {
 
   const nameInput = document.getElementById('algo-name') as HTMLInputElement;
   nameInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') commitName();
-    else if (e.key === 'Escape') hideName();
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      commitName();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      hideName();
+    }
   });
   nameInput.addEventListener('blur', () => setTimeout(hideName, 150));
 
