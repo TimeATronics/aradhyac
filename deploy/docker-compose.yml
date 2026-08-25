@@ -26,8 +26,11 @@ services:
       - "8080"
 
   sessions:
-    image: node:22-alpine
+    build: ./sessions
     restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
     working_dir: /app
     command: ["node", "server.mjs"]
     volumes:

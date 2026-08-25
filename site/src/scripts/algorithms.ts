@@ -18,13 +18,29 @@ let lastStarTr: HTMLTableRowElement | null = null;
 let delArmed = false;
 let syncTimer: ReturnType<typeof setTimeout> | undefined;
 
+const NAME_RE = /^[a-zA-Z0-9 _.-]{1,24}$/;
+const BAD_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
+function sanitize(s: any): Record<string, any> {
+  const out: Record<string, any> = {};
+  for (const [k, v] of Object.entries(s || {})) {
+    if (BAD_KEYS.has(k) || !NAME_RE.test(k) || !v || typeof v !== 'object' || Array.isArray(v)) continue;
+    out[k] = {
+      session_name: v.session_name,
+      progress: Array.isArray(v.progress) ? v.progress.filter((x: any) => typeof x === 'string' && x.length <= 64) : [],
+      starred: Array.isArray(v.starred) ? v.starred.filter((x: any) => typeof x === 'string' && x.length <= 64) : [],
+    };
+  }
+  return out;
+}
+
 function saveLocal(s: Record<string, any>) {
-  localStorage.setItem(KEY_SESSIONS, JSON.stringify(s));
+  localStorage.setItem(KEY_SESSIONS, JSON.stringify(sanitize(s)));
 }
 
 function readSessions(): Record<string, any> {
   try {
-    return JSON.parse(localStorage.getItem(KEY_SESSIONS) || '{}');
+    return sanitize(JSON.parse(localStorage.getItem(KEY_SESSIONS) || '{}'));
   } catch {
     return {};
   }
