@@ -31,8 +31,6 @@ services:
     read_only: true
     tmpfs:
       - /tmp
-    working_dir: /app
-    command: ["node", "server.mjs"]
     volumes:
       - ./sessions:/app:ro
       - sessions-config:/home/node/.config/aradhyac

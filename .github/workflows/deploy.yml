@@ -46,5 +46,5 @@ jobs:
             set -e
             ln -sfn /srv/aradhyac/releases/${GITHUB_SHA} /srv/aradhyac/current
             ls -td /srv/aradhyac/releases/*/ | tail -n +4 | xargs -r rm -rf
-            cd /opt/aradhyac && docker compose up -d --force-recreate
+            cd /opt/aradhyac && docker compose up -d --build --force-recreate
           "
