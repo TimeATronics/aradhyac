@@ -4,6 +4,7 @@
 
 const KEY_SESSIONS = 'algorithms.sessions';
 const KEY_ACTIVE = 'algorithms.active';
+const KEY_TARGETS = 'algorithms.targets';
 
 const COLORS: Record<string, string> = { Easy: '#2f9e44', Medium: '#e8890c', Hard: '#d64545' };
 const RANK: Record<string, number> = { Easy: 0, Medium: 1, Hard: 2 };
@@ -39,6 +40,21 @@ function sanitize(s: any): Record<string, any> {
 
 function saveLocal(s: Record<string, any>) {
   localStorage.setItem(KEY_SESSIONS, JSON.stringify(sanitize(s)));
+}
+
+function targetSetFromStorage(): Set<number> {
+  try {
+    const arr = JSON.parse(localStorage.getItem(KEY_TARGETS) || '[]');
+    return new Set(
+      Array.isArray(arr) ? arr.filter((x: any) => Number.isInteger(x) && x >= 1 && x <= 100) : [],
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+function saveTargetsToStorage() {
+  localStorage.setItem(KEY_TARGETS, JSON.stringify([...targets]));
 }
 
 function readSessions(): Record<string, any> {
@@ -81,6 +97,9 @@ async function syncFromServer() {
       progress = new Set(data[name].progress || []);
       starred = new Set(data[name].starred || []);
       targets = new Set((data[name].targets || []).filter((x: any) => Number.isInteger(x) && x >= 1 && x <= 100));
+      saveTargetsToStorage();
+    } else {
+      targets = targetSetFromStorage();
     }
     refreshSessionOptions();
     syncTargets();
@@ -252,6 +271,8 @@ function loadSession(name: string | null) {
       starred = new Set(s.starred || []);
       targets = new Set((s.targets || []).filter((x: any) => Number.isInteger(x) && x >= 1 && x <= 100));
     }
+  } else {
+    targets = targetSetFromStorage();
   }
   localStorage.setItem(KEY_ACTIVE, name ?? '');
   refreshSessionOptions();
@@ -414,6 +435,7 @@ export function init() {
       targets = new Set(
         Array.from(document.querySelectorAll<HTMLInputElement>('.target-check:checked')).map((c) => Number(c.value)),
       );
+      saveTargetsToStorage();
       updateTargetSummary();
       persist();
       applyView();
@@ -424,6 +446,7 @@ export function init() {
   document.getElementById('algo-target-clear')?.addEventListener('click', () => {
     targets.clear();
     document.querySelectorAll<HTMLInputElement>('.target-check').forEach((el) => (el.checked = false));
+    saveTargetsToStorage();
     updateTargetSummary();
     persist();
     applyView();
