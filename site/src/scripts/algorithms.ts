@@ -303,7 +303,8 @@ function showName() {
   const input = document.getElementById('algo-name') as HTMLInputElement | null;
   if (!sel || !input) return;
   if (!input.hidden) {
-    hideName();
+    // already typing -> second press saves the session name
+    commitName();
     return;
   }
   sel.hidden = true;
