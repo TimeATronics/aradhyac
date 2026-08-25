@@ -12,6 +12,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
     depends_on:
       - editor
+      - sessions
 
   editor:
     image: node:22-alpine
@@ -24,6 +25,20 @@ services:
     expose:
       - "8080"
 
+  sessions:
+    image: node:22-alpine
+    restart: unless-stopped
+    working_dir: /app
+    command: ["node", "server.mjs"]
+    volumes:
+      - ./sessions:/app:ro
+      - sessions-data:/data
+    environment:
+      - SESSIONS_FILE=/data/sessions.json
+    expose:
+      - "8080"
+
 volumes:
   caddy_data:
   caddy_config:
+  sessions-data:

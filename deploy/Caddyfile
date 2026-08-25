@@ -3,6 +3,10 @@ aradhyac.com {
     reverse_proxy editor:8080
   }
 
+  handle /api/sessions* {
+    reverse_proxy sessions:8080
+  }
+
   handle {
     root * /srv/aradhyac/current
     try_files {path} {path}/index.html

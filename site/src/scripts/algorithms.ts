@@ -1,5 +1,6 @@
-/* Algorithms Practice tracker: sessions in localStorage, targets in memory,
-   column filters, difficulty sort, shift-click range marking/starring. */
+/* Algorithms Practice tracker: sessions synced to a server-side store with
+   localStorage as cache, targets in memory, column filters, difficulty sort,
+   shift-click range marking/starring. */
 
 const KEY_SESSIONS = 'algorithms.sessions';
 const KEY_ACTIVE = 'algorithms.active';
@@ -15,6 +16,11 @@ let sortDir = 0; // 0 natural, 1 easy->hard, -1 hard->easy
 let lastDoneTr: HTMLTableRowElement | null = null;
 let lastStarTr: HTMLTableRowElement | null = null;
 let delArmed = false;
+let syncTimer: ReturnType<typeof setTimeout> | undefined;
+
+function saveLocal(s: Record<string, any>) {
+  localStorage.setItem(KEY_SESSIONS, JSON.stringify(s));
+}
 
 function readSessions(): Record<string, any> {
   try {
@@ -24,8 +30,41 @@ function readSessions(): Record<string, any> {
   }
 }
 
+function scheduleSync(s: Record<string, any>) {
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    fetch('/api/sessions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(s),
+      signal: AbortSignal.timeout(8000),
+    }).catch(() => {});
+  }, 600);
+}
+
 function writeSessions(s: Record<string, any>) {
-  localStorage.setItem(KEY_SESSIONS, JSON.stringify(s));
+  saveLocal(s);
+  scheduleSync(s);
+}
+
+async function syncFromServer() {
+  try {
+    const res = await fetch('/api/sessions', { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (typeof data !== 'object' || data === null || Array.isArray(data)) return;
+    saveLocal(data);
+    const name = active;
+    progress = new Set();
+    starred = new Set();
+    if (name && data[name]) {
+      progress = new Set(data[name].progress || []);
+      starred = new Set(data[name].starred || []);
+    }
+    refreshSessionOptions();
+    applyRows();
+    updateMetrics();
+  } catch {}
 }
 
 function persist() {
@@ -260,6 +299,7 @@ export function init() {
   } catch {}
   const saved = readSessions();
   loadSession(typeof restore === 'string' && restore && saved[restore] ? restore : null);
+  syncFromServer();
 
   const tbody = document.getElementById('algo-body');
 

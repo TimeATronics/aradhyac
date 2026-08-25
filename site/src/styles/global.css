@@ -280,7 +280,7 @@ td a { word-break: break-all; }
 }
 .target-list label { display: block; font-size: 0.88rem; padding: 0.15rem 0; cursor: pointer; }
 .target-list button { margin-top: 0.5rem; font-size: 0.8rem; }
-.diff-filters { display: flex; gap: 0.9rem; align-items: center; font-size: 0.88rem; }
+.diff-filters { display: flex; gap: 0.9rem; align-items: center; font-size: 0.88rem; margin-inline: auto; }
 .diff-filters label { cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
 
 .metric-block { margin-bottom: 0.9rem; }
@@ -337,7 +337,53 @@ td a { word-break: break-all; }
 #algo-diff-sort:hover { color: var(--accent); border-color: var(--accent); }
 .algo-table tbody tr:hover { background: rgba(127, 127, 127, 0.09); }
 .num-cell label { display: flex; align-items: center; gap: 0.45rem; cursor: pointer; color: var(--muted); font-size: 0.8rem; user-select: none; }
-.num-cell input { accent-color: var(--accent); cursor: pointer; }
+.num-cell input { cursor: pointer; }
+
+/* custom checkboxes matching the theme (native ones render oddly in some browsers) */
+.algo-table input[type="checkbox"],
+.diff-check,
+.target-check {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin: 0;
+  border: 1.5px solid var(--muted);
+  border-radius: 4px;
+  background: var(--bg);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+.algo-table input[type="checkbox"]:hover,
+.diff-check:hover,
+.target-check:hover { border-color: var(--accent); }
+.algo-table input[type="checkbox"]:checked,
+.diff-check:checked,
+.target-check:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.algo-table input[type="checkbox"]:checked::after,
+.diff-check:checked::after,
+.target-check:checked::after {
+  content: "";
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+.algo-table input[type="checkbox"]:focus-visible,
+.diff-check:focus-visible,
+.target-check:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
 .star-cell button, .star-cell { user-select: none; }
 tr.is-done .title-cell { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(127, 127, 127, 0.6); }
 .star-cell { width: 30px; }
