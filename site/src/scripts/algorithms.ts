@@ -29,6 +29,9 @@ function sanitize(s: any): Record<string, any> {
       session_name: v.session_name,
       progress: Array.isArray(v.progress) ? v.progress.filter((x: any) => typeof x === 'string' && x.length <= 64) : [],
       starred: Array.isArray(v.starred) ? v.starred.filter((x: any) => typeof x === 'string' && x.length <= 64) : [],
+      targets: Array.isArray(v.targets)
+        ? v.targets.filter((x: any) => Number.isInteger(x) && x >= 1 && x <= 100).slice(0, 30)
+        : [],
     };
   }
   return out;
@@ -73,12 +76,16 @@ async function syncFromServer() {
     const name = active;
     progress = new Set();
     starred = new Set();
+    targets = new Set();
     if (name && data[name]) {
       progress = new Set(data[name].progress || []);
       starred = new Set(data[name].starred || []);
+      targets = new Set((data[name].targets || []).filter((x: any) => Number.isInteger(x) && x >= 1 && x <= 100));
     }
     refreshSessionOptions();
+    syncTargets();
     applyRows();
+    applyView();
     updateMetrics();
   } catch {}
 }
@@ -86,7 +93,7 @@ async function syncFromServer() {
 function persist() {
   if (!active) return;
   const s = readSessions();
-  s[active] = { session_name: active, progress: [...progress], starred: [...starred] };
+  s[active] = { session_name: active, progress: [...progress], starred: [...starred], targets: [...targets] };
   writeSessions(s);
 }
 
@@ -112,7 +119,7 @@ function applyRows() {
 
 /* ---------- view: filters + sort ---------- */
 
-function applyView() {
+function viewRows(): HTMLTableRowElement[] {
   const q = (document.getElementById('algo-search') as HTMLInputElement).value.trim().toLowerCase();
   const topic = (document.getElementById('algo-topic') as HTMLSelectElement).value;
   const diffs = new Set(
@@ -120,14 +127,22 @@ function applyView() {
       .filter((el) => el.checked)
       .map((el) => el.dataset.diff),
   );
+  return rows().filter((tr) => {
+    const inDiff = !tr.dataset.diff || diffs.has(tr.dataset.diff);
+    const inTopic = !topic || tr.dataset.step === topic;
+    const inSearch = !q || ((tr as any)._q as string).includes(q);
+    return inDiff && inTopic && inSearch;
+  });
+}
+
+function applyView() {
+  const view = viewRows();
+  const shown = targets.size ? view.filter((tr) => targets.has(Number(tr.dataset.step))) : view;
+  const shownSet = new Set(shown);
   let visible = 0;
   for (const tr of rows()) {
-    const ok =
-      (!tr.dataset.diff || diffs.has(tr.dataset.diff)) &&
-      (!topic || tr.dataset.step === topic) &&
-      (!q || ((tr as any)._q as string).includes(q));
-    tr.hidden = !ok;
-    if (ok) visible++;
+    tr.hidden = !shownSet.has(tr);
+    if (!tr.hidden) visible++;
   }
   const counter = document.getElementById('algo-visible');
   if (counter) counter.textContent = `${visible} shown`;
@@ -181,10 +196,10 @@ function countsText(c: Record<string, number>, t: Record<string, number>, total:
 }
 
 function updateMetrics() {
-  const all = rows();
-  const scoped = targets.size ? all.filter((tr) => targets.has(Number(tr.dataset.step))) : [];
+  const view = viewRows();
+  const scoped = targets.size ? view.filter((tr) => targets.has(Number(tr.dataset.step))) : [];
 
-  const g = countsIn(all);
+  const g = countsIn(view);
   paintBar(document.getElementById('algo-g-bar'), g.c, g.total);
   const gp = document.getElementById('algo-g-pct');
   if (gp) gp.textContent = g.total ? Math.round(((g.c.Easy + g.c.Medium + g.c.Hard) / g.total) * 100) + '%' : '0%';
@@ -229,16 +244,20 @@ function loadSession(name: string | null) {
   active = name;
   progress = new Set();
   starred = new Set();
+  targets = new Set();
   if (name) {
     const s = readSessions()[name];
     if (s) {
       progress = new Set(s.progress || []);
       starred = new Set(s.starred || []);
+      targets = new Set((s.targets || []).filter((x: any) => Number.isInteger(x) && x >= 1 && x <= 100));
     }
   }
   localStorage.setItem(KEY_ACTIVE, name ?? '');
   refreshSessionOptions();
+  syncTargets();
   applyRows();
+  applyView();
   updateMetrics();
 }
 
@@ -247,6 +266,13 @@ function updateTargetSummary() {
   if (!el) return;
   const n = targets.size;
   el.textContent = n ? `Targets: ${n} topic${n > 1 ? 's' : ''}` : 'Targets: none';
+}
+
+function syncTargets() {
+  document.querySelectorAll<HTMLInputElement>('.target-check').forEach((el) => {
+    el.checked = targets.has(Number(el.value));
+  });
+  updateTargetSummary();
 }
 
 /* ---------- inline session naming ---------- */
@@ -282,9 +308,9 @@ function commitName() {
     hideName();
     return;
   }
-  // New snapshots the current progress/starred into a new named session
+  // New snapshots the current progress/starred/targets into a new named session
   const s = readSessions();
-  s[name] = { session_name: name, progress: [...progress], starred: [...starred] };
+  s[name] = { session_name: name, progress: [...progress], starred: [...starred], targets: [...targets] };
   writeSessions(s);
   loadSession(name);
   hideName();
@@ -360,11 +386,20 @@ export function init() {
   });
 
   document.querySelectorAll<HTMLInputElement>('.diff-check').forEach((el) =>
-    el.addEventListener('change', applyView),
+    el.addEventListener('change', () => {
+      applyView();
+      updateMetrics();
+    }),
   );
 
-  document.getElementById('algo-search')?.addEventListener('input', applyView);
-  document.getElementById('algo-topic')?.addEventListener('change', applyView);
+  document.getElementById('algo-search')?.addEventListener('input', () => {
+    applyView();
+    updateMetrics();
+  });
+  document.getElementById('algo-topic')?.addEventListener('change', () => {
+    applyView();
+    updateMetrics();
+  });
 
   const sortBtn = document.getElementById('algo-diff-sort');
   sortBtn?.addEventListener('click', () => {
@@ -380,6 +415,8 @@ export function init() {
         Array.from(document.querySelectorAll<HTMLInputElement>('.target-check:checked')).map((c) => Number(c.value)),
       );
       updateTargetSummary();
+      persist();
+      applyView();
       updateMetrics();
     }),
   );
@@ -388,6 +425,8 @@ export function init() {
     targets.clear();
     document.querySelectorAll<HTMLInputElement>('.target-check').forEach((el) => (el.checked = false));
     updateTargetSummary();
+    persist();
+    applyView();
     updateMetrics();
   });
 

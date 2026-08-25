@@ -35,13 +35,13 @@ services:
     command: ["node", "server.mjs"]
     volumes:
       - ./sessions:/app:ro
-      - sessions-data:/data
+      - sessions-config:/home/node/.config/aradhyac
     environment:
-      - SESSIONS_FILE=/data/sessions.json
+      - SESSIONS_FILE=/home/node/.config/aradhyac/algorithms/sessions.json
     expose:
       - "8080"
 
 volumes:
   caddy_data:
   caddy_config:
-  sessions-data:
+  sessions-config:

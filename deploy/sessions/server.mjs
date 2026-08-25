@@ -5,12 +5,13 @@ import { createServer } from "node:http";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
-const FILE = process.env.SESSIONS_FILE || "/data/sessions.json";
+const FILE = process.env.SESSIONS_FILE || "/home/node/.config/aradhyac/algorithms/sessions.json";
 const PORT = Number(process.env.PORT || 8080);
 
 const MAX_BODY = 4 * 1024 * 1024; // hard cap on request body
 const MAX_SESSIONS = 300; // cap on stored sessions
 const MAX_ITEMS = 5000; // cap on progress/starred array length per session
+const MAX_TARGETS = 30; // cap on targets array length per session
 const MAX_ID_LEN = 64;
 
 const NAME_RE = /^[a-zA-Z0-9 _.-]{1,24}$/;
@@ -82,8 +83,19 @@ function validate(data) {
         if (typeof id !== "string" || id.length > MAX_ID_LEN || !ID_RE.test(id)) throw new Error("bad item");
       }
     }
+    if (v.targets !== undefined) {
+      if (!Array.isArray(v.targets) || v.targets.length > MAX_TARGETS) throw new Error("bad targets");
+      for (const t of v.targets) {
+        if (!Number.isInteger(t) || t < 1 || t > 100) throw new Error("bad target");
+      }
+    }
   }
   return true;
+}
+
+function bad(res, status, detail) {
+  if (detail) console.error("sessions store:", detail);
+  res.writeHead(status, { "Content-Type": "application/json" }).end(JSON.stringify({ error: "request failed" }));
 }
 
 createServer(async (req, res) => {
@@ -99,7 +111,7 @@ createServer(async (req, res) => {
     return;
   }
   if (!allowed(clientIp(req))) {
-    res.writeHead(429, { "Content-Type": "application/json" }).end(JSON.stringify({ error: "too many requests" }));
+    bad(res, 429);
     return;
   }
   if (req.method === "GET") {
@@ -109,7 +121,7 @@ createServer(async (req, res) => {
   }
   const ct = (req.headers["content-type"] || "").toLowerCase();
   if (!ct.includes("application/json")) {
-    res.writeHead(415).end();
+    bad(res, 415);
     return;
   }
   let body = "";
@@ -119,7 +131,7 @@ createServer(async (req, res) => {
       if (body.length > MAX_BODY) throw Object.assign(new Error("too large"), { status: 413 });
     }
   } catch (e) {
-    res.writeHead(e.status || 400).end();
+    bad(res, e.status || 400);
     return;
   }
   try {
@@ -128,7 +140,7 @@ createServer(async (req, res) => {
     save(data);
     res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify({ ok: true }));
   } catch (e) {
-    res.writeHead(400, { "Content-Type": "application/json" }).end(JSON.stringify({ error: String(e.message) }));
+    bad(res, 400, e.message);
   }
 }).listen(PORT, () => {
   console.log(`sessions store on :${PORT} -> ${FILE}`);
