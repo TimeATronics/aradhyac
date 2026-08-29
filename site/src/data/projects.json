@@ -1,8 +1,14 @@
 [
   {
     "title": "TrimUI Brick Music Player",
-    "description": "An efficient music player for the TrimUI Brick - My latest project, written in Golang, using SDL2. It is supposed to look like a Zune (but it has its differences still) and supports large song libraries, with search support (on-screen keyboard) and playlists as well! There is also support for using Bluetooth audio output (it can be a little finicky sometimes but otherwise it works pretty well!)\n\nCheck it out if you are looking for a nice, easy-on-the-battery-life Music Player for the TrimUI Brick (binaries available on the Releases page)",
+    "description": "An OPUS / MP3 music player for the TrimUI Brick - My latest project, written in Golang, using SDL2. It is supposed to look like a Zune (but it has its differences still) and supports large song libraries, with search support (on-screen keyboard) and playlists as well! There is also support for using Bluetooth audio output (it can be a little finicky sometimes but otherwise it works pretty well!)\n\nCheck it out if you are looking for a nice, easy-on-the-battery-life Music Player for the TrimUI Brick (binaries available on the Releases page)",
     "repo": "https://github.com/TimeATronics/music_player",
+    "link": ""
+  },
+  {
+    "title": "n64ui",
+    "description": "Mupen64 GUI for TrimUI Brick + Build System with Rice and gliden64mk2 video plugins + GCC 16 Toolchain / Sysroot on docker.io\n- Supports Pause/Unpause by opening an overlay menu (Menu Button on TrimUI Brick / Esc on Keyboard)\n- Load / Save States\n- Input Mapping (per-game / Global)\n- Video / Audio / Speed settings\n- and more...",
+    "repo": "https://github.com/TimeATronics/n64ui",
     "link": ""
   },
   {
