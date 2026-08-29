@@ -12,6 +12,12 @@
     "link": ""
   },
   {
+    "title": "AutoTypeset",
+    "description": "I spent my last 2 semesters of B.Tech interning, and so never had the chance to write handwritten notes for the subjects then. So I mostly generated LaTeX notes with the reference textbooks... Fast-forward to now, AutoTypeset takes my handwritten PDF notes as input, and outputs LaTeX PDFs. And it works great!",
+    "repo": "https://github.com/TimeATronics/autotypeset",
+    "link": ""
+  },
+  {
     "title": "Zetla",
     "description": "Local-first AI chat app for Android - bring your own API keys, offline Vosk voice input, web search via Exa MCP, and a bundled CPython sandbox for running code. Kotlin/Compose with a C++ core.",
     "repo": "https://github.com/TimeATronics/Zetla",
@@ -28,11 +34,5 @@
     "description": "A color-sorting puzzle built with three.js - play it right here.",
     "repo": "",
     "link": "/tower"
-  },
-  {
-    "title": "AutoTypeset",
-    "description": "I spent my last 2 semesters of B.Tech interning, and so never had the chance to write handwritten notes for the subjects then. So I mostly generated LaTeX notes with the reference textbooks... Fast-forward to now, AutoTypeset takes my handwritten PDF notes as input, and outputs LaTeX PDFs. And it works great!",
-    "repo": "https://github.com/TimeATronics/autotypeset",
-    "link": ""
   }
 ]
