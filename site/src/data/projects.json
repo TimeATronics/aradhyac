@@ -34,5 +34,11 @@
     "description": "A color-sorting puzzle built with three.js - play it right here.",
     "repo": "",
     "link": "/tower"
+  },
+  {
+    "title": "NDS UI - Launcher for TrimUI Brick",
+    "description": "A nice little launcher for games and apps on the TrimUI Brick Stock OS with 3D rotatable Cartridge/CD Models!",
+    "repo": "https://github.com/TimeATronics/ndsui",
+    "link": ""
   }
 ]
